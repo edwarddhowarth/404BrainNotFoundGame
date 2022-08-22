@@ -192,6 +192,8 @@ public class AnimationStateController : MonoBehaviour
             animator.SetBool("IsJumping", false);
             animator.SetBool("IsFalling", false);
             animator.SetBool("IsLanded", true);
+            //animator.SetBool("RollLanding", true);
+           // animator.SetBool("HardLanding", true);
         }
 
         if(couched)
