@@ -11,6 +11,7 @@ public class AnimationStateController : MonoBehaviour
     public float deceleration = 2.0f;
     public float maxWalkVelocity = 0.5f;
     public float maxRunVelocity = 2.0f;
+   
 
     //increse performance
     int VelocityZHash;
@@ -26,6 +27,7 @@ public class AnimationStateController : MonoBehaviour
         //increse performance
         VelocityZHash = Animator.StringToHash("Velocity Z");
         VelocityXHash = Animator.StringToHash("Velocity X");
+        
     }
 
     //handles acceleration and deceleration
@@ -169,6 +171,8 @@ public class AnimationStateController : MonoBehaviour
         bool leftPressed = Input.GetKey(KeyCode.A);
         bool rightPressed = Input.GetKey(KeyCode.D);
         bool runPressed = Input.GetKey(KeyCode.LeftShift);
+        bool jump = Input.GetKey(KeyCode.Space);
+        bool couched = Input.GetKey(KeyCode.C);
 
         //set current maxVelocity
         float currentMaxVelocity = runPressed ? maxRunVelocity : maxWalkVelocity;
@@ -177,6 +181,27 @@ public class AnimationStateController : MonoBehaviour
         changeVelocity(forwardPressed, leftPressed, rightPressed, currentMaxVelocity);
         lockOrResetVelocity(forwardPressed, leftPressed, rightPressed, runPressed, currentMaxVelocity);
 
+
+        if (jump)
+        {
+            animator.SetBool("IsJumping", true);
+            animator.SetBool("IsFalling", true);
+        }
+        else
+        {
+            animator.SetBool("IsJumping", false);
+            animator.SetBool("IsFalling", false);
+            animator.SetBool("IsLanded", true);
+        }
+
+        if(couched)
+        {
+            animator.SetBool("IsCrouched", true);
+        }
+        else
+        {
+            animator.SetBool("IsCrouched", false);
+        }
 
         //set the parameters to our local variable vaules
         animator.SetFloat(VelocityZHash, velocityZ);
