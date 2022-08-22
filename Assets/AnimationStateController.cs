@@ -12,6 +12,10 @@ public class AnimationStateController : MonoBehaviour
     public float maxWalkVelocity = 0.5f;
     public float maxRunVelocity = 2.0f;
 
+    //increse performance
+    int VelocityZHash;
+    int VelocityXHash;
+
 
     // Start is called before the first frame update
     void Start()
@@ -19,21 +23,14 @@ public class AnimationStateController : MonoBehaviour
         //set reference for animator
         animator = GetComponent<Animator>();
 
-
+        //increse performance
+        VelocityZHash = Animator.StringToHash("Velocity Z");
+        VelocityXHash = Animator.StringToHash("Velocity X");
     }
 
-    // Update is called once per frame
-    void Update()
+    //handles acceleration and deceleration
+    void changeVelocity(bool forwardPressed, bool leftPressed, bool rightPressed, float currentMaxVelocity)
     {
-        //get key input from player
-        bool forwardPressed = Input.GetKey("w");
-        bool leftPressed = Input.GetKey("a");
-        bool rightPressed = Input.GetKey("d");
-        bool runPressed = Input.GetKey("left shift");
-
-        //set current maxVelocity
-        float currentMaxVelocity = runPressed ? maxRunVelocity : maxWalkVelocity;
-
         //if player presses forward, increase velocity in z direction
         if (forwardPressed && velocityZ < currentMaxVelocity)
         {
@@ -54,24 +51,27 @@ public class AnimationStateController : MonoBehaviour
         {
             velocityZ -= Time.deltaTime * deceleration;
         }
-
-        //reset VelocityZ
-        if (!forwardPressed && velocityZ < 0.0f)
-        {
-            velocityZ = 0.0f;
-        }
-
         //increase velocityX if left is not pressed adn velocityX is < 0
         if (!leftPressed && velocityX < 0.0f)
         {
             velocityX += Time.deltaTime * deceleration;
         }
 
-
         //decreases velocityX if right is not pressed adn velocityX is > 0
         if (!rightPressed && velocityX > 0.0f)
         {
             velocityX -= Time.deltaTime * deceleration;
+        }
+
+    }
+
+    //handles reset Velocity
+    void lockOrResetVelocity(bool forwardPressed, bool leftPressed, bool rightPressed, bool runPressed, float currentMaxVelocity)
+    {
+        //reset VelocityZ
+        if (!forwardPressed && velocityZ < 0.0f)
+        {
+            velocityZ = 0.0f;
         }
 
 
@@ -107,13 +107,14 @@ public class AnimationStateController : MonoBehaviour
                 }
             }
         }
-            //lock left
-            if (leftPressed && runPressed && velocityX < -currentMaxVelocity)
-            {
-                velocityX = -currentMaxVelocity;
-            }
-            else
-            {
+
+        //lock left
+        if (leftPressed && runPressed && velocityX < -currentMaxVelocity)
+        {
+            velocityX = -currentMaxVelocity;
+        }
+        else
+        {
             if (leftPressed && velocityX < -currentMaxVelocity)
             {
                 velocityX -= Time.deltaTime * deceleration;
@@ -132,13 +133,13 @@ public class AnimationStateController : MonoBehaviour
                     }
                 }
             }
-                    //lock right
-                    if (rightPressed && runPressed && velocityX > currentMaxVelocity)
-                    {
-                        velocityX = currentMaxVelocity;
-                    }
-                    else
-                    {
+            //lock right
+            if (rightPressed && runPressed && velocityX > currentMaxVelocity)
+            {
+                velocityX = currentMaxVelocity;
+            }
+            else
+            {
                 if (rightPressed && velocityX > currentMaxVelocity)
                 {
                     velocityX -= Time.deltaTime * deceleration;
@@ -157,12 +158,32 @@ public class AnimationStateController : MonoBehaviour
                         }
                     }
                 }
-
-                            //set the parameters to our local variable vaules
-                            animator.SetFloat("Velocity Z", velocityZ);
-                            animator.SetFloat("Velocity X", velocityX);
-                        }
-                    }
-                }
             }
+        }
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        //get key input from player
+        bool forwardPressed = Input.GetKey(KeyCode.W);
+        bool leftPressed = Input.GetKey(KeyCode.A);
+        bool rightPressed = Input.GetKey(KeyCode.D);
+        bool runPressed = Input.GetKey(KeyCode.LeftShift);
+
+        //set current maxVelocity
+        float currentMaxVelocity = runPressed ? maxRunVelocity : maxWalkVelocity;
+
+        //handle changed in velocity
+        changeVelocity(forwardPressed, leftPressed, rightPressed, currentMaxVelocity);
+        lockOrResetVelocity(forwardPressed, leftPressed, rightPressed, runPressed, currentMaxVelocity);
+
+
+        //set the parameters to our local variable vaules
+        animator.SetFloat(VelocityZHash, velocityZ);
+        animator.SetFloat(VelocityXHash, velocityX);
+
+
+
+    }
+}
                    
