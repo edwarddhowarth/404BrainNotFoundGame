@@ -4,11 +4,161 @@ ModelImporter:
   serializedVersion: 22103
   internalIDToNameTable:
   - first:
-      74: 4779866971236158511
-    second: Nurse(2)|Armature.001|Armature|Cool Pose
+      74: -7109457238012781684
+    second: Armature.001|Armature.001|Armature|Cool Pose
   - first:
-      74: -7646640811080718848
-    second: Nurse(2)|Gaurd Aim.001
+      74: -8024594520379768000
+    second: Armature.001|Armature.001|Armature|Crouch Idle
+  - first:
+      74: 1248710327021007938
+    second: Armature.001|Armature.001|Armature|Funky Idle
+  - first:
+      74: 7561140479571539261
+    second: Armature.001|Armature.001|Armature|Gaurd Aim
+  - first:
+      74: 1959635467987755696
+    second: Armature.001|Armature.001|Armature|GaurdIdel
+  - first:
+      74: 7847331796833551702
+    second: Armature.001|Armature.001|Armature|Hipshot
+  - first:
+      74: 3505627735609067406
+    second: Armature.001|Armature.001|Armature|Robot Aim
+  - first:
+      74: -7167350631709205372
+    second: Armature.001|Armature.001|Armature|Run
+  - first:
+      74: -4735876130463310990
+    second: Armature.001|Armature.001|Armature|Slide
+  - first:
+      74: -785149686346695830
+    second: Armature.001|Armature.001|Armature|TestSubject Stance
+  - first:
+      74: 3995650697222939243
+    second: Armature.001|Armature.001|Armature|TestSubjectWalk
+  - first:
+      74: -4496342551926850652
+    second: Armature.001|Armature.001|Armature|TPose
+  - first:
+      74: 6767027864026328913
+    second: Armature.001|Armature.001|Armature|Walk
+  - first:
+      74: 7187432311274760158
+    second: Armature.001|Armature.002|Couch to Stand
+  - first:
+      74: 8648235535617879713
+    second: Armature.001|Armature.002|Crouched
+  - first:
+      74: -6544016021921731763
+    second: Armature.001|Armature.002|fall into a roll
+  - first:
+      74: -300558229731850279
+    second: Armature.001|Armature.002|Falling
+  - first:
+      74: 3196157241378617423
+    second: Armature.001|Armature.002|Hard landing
+  - first:
+      74: -2591186166420778068
+    second: Armature.001|Armature.002|Idle
+  - first:
+      74: 515564409417334775
+    second: Armature.001|Armature.002|Idle leaning against wall
+  - first:
+      74: -782771977251178003
+    second: Armature.001|Armature.002|Idle Right foot shake
+  - first:
+      74: -558119810184936290
+    second: Armature.001|Armature.002|Idle(2)
+  - first:
+      74: -4596138641755169687
+    second: Armature.001|Armature.002|Idle(3)
+  - first:
+      74: -8408417329756769172
+    second: Armature.001|Armature.002|Jumpping
+  - first:
+      74: -5251904273991264363
+    second: Armature.001|Armature.002|moving left against a wall
+  - first:
+      74: -3343653380597690133
+    second: Armature.001|Armature.002|Moving right against a wall
+  - first:
+      74: 8763112166251891154
+    second: Armature.001|Armature.002|Pushhing off wall
+  - first:
+      74: -5369435383456672784
+    second: Armature.001|Armature.002|Run to stop
+  - first:
+      74: 4223579039673332923
+    second: Armature.001|Armature.002|running(2)
+  - first:
+      74: 878641605702081602
+    second: Armature.001|Armature.002|Sneak right
+  - first:
+      74: -1382779385807344496
+    second: Armature.001|Armature.002|Sneaking left
+  - first:
+      74: -1303914149124208900
+    second: Armature.001|Armature.002|Stand to cover/crouch
+  - first:
+      74: 2282397164003790470
+    second: Armature.001|Armature.002|Stand to standing cover
+  - first:
+      74: -2589814867605299772
+    second: Armature.001|Armature.002|Turn Left
+  - first:
+      74: 2974915091789683141
+    second: Armature.001|Armature.002|walking(2)
+  - first:
+      74: 6446952008160903552
+    second: Armature.001|Cool Pose
+  - first:
+      74: -8780173810290626400
+    second: Armature.001|Crouch Idle
+  - first:
+      74: -3325643303372294356
+    second: Armature.001|Funky Idle
+  - first:
+      74: 6321733355718323199
+    second: Armature.001|Gaurd Aim
+  - first:
+      74: 642639315797846721
+    second: Armature.001|Gaurd Aim.001
+  - first:
+      74: 1838892543893756510
+    second: Armature.001|Gaurd Aim.002
+  - first:
+      74: -5389635452449647590
+    second: Armature.001|GaurdIdel
+  - first:
+      74: -1833784642138504701
+    second: Armature.001|Hipshot
+  - first:
+      74: 3991380346333291316
+    second: Armature.001|Robot Aim
+  - first:
+      74: 8673806127378450134
+    second: Armature.001|Robot Aim.001
+  - first:
+      74: -6665163370123221955
+    second: Armature.001|Robot Aim.002
+  - first:
+      74: -2969036542940970518
+    second: Armature.001|Run
+  - first:
+      74: -4699277957838074569
+    second: Armature.001|Slide
+  - first:
+      74: -1437265497583666074
+    second: Armature.001|TestSubject Stance
+  - first:
+      74: -2768017731906016934
+    second: Armature.001|TestSubjectWalk
+  - first:
+      74: 7168972985768442993
+    second: Armature.001|TPose
+  - first:
+      74: -448239265334008587
+    second: Armature.001|Walk
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -88,7 +238,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 1
+  importAnimation: 0
   humanDescription:
     serializedVersion: 3
     human: []
