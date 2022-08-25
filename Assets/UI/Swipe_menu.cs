@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Swipe_menu : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class Swipe_menu : MonoBehaviour
     void Update()
     {
         pos = new float[transform.childCount];
-        float distance = 1f / (pos.Length - 1);
+        float distance = 1f / (pos.Length - 1f);
         for (int i = 0; i < pos.Length; i++)
         {
             pos[i] = distance * i;
@@ -39,6 +40,7 @@ public class Swipe_menu : MonoBehaviour
                 }
             }
         }
+
         for (int i = 0; i < pos.Length; i++)
         {
             if (scroll_pos < pos[i] + (distance / 2) && scroll_pos > pos[i] - (distance / 2))
@@ -49,9 +51,11 @@ public class Swipe_menu : MonoBehaviour
             {
                 if (a != i)
                 {
-                    transform.GetChild(a).localScale = Vector2.Lerp(transform.GetChild(a).localScale, new Vector2(0.8f, 0.8f), 0.1f);
+                      transform.GetChild(a).localScale = Vector2.Lerp(transform.GetChild(a).localScale, new Vector2(0.8f, 0.8f), 0.1f);
                 }
+
             }
         }
     }
+
 }
