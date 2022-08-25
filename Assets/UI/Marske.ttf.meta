@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: c89bc8392b93e1145a5b4fc250924651
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Marske
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 47f195f02a6a1db4e828fcc74f3d8802, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

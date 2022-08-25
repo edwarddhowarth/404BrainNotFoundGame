@@ -402,6 +402,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestSubject
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3586596de616c4646a7a9f2656850c71, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 3586596de616c4646a7a9f2656850c71, type: 3}
       propertyPath: m_Avatar
       value: 
@@ -483,7 +487,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b0b936d2837017c4e9e239e302c45cc1, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
