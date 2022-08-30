@@ -21,21 +21,13 @@ public class EventManager : MonoBehaviour
     private static EventManager eventManager;
 
     public enum EventType {
+        PlayerPosition,
         InCameraView,
-        InLight,
+        LightIntensity,
         PlayerLightIntensity,
         PlayerDetected,
-
     }
 
-    //Struct and List below for DEBUG ONLY
-    private struct Events
-    {
-        public string key;
-        public string value;
-    }
-
-    private static List<Events> currentMessages;
 
 
 
@@ -104,14 +96,6 @@ public class EventManager : MonoBehaviour
         if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
             thisEvent.Invoke(message);
-
-            /*
-            //DEBUG ONLY
-            var newMessage = new Events();
-            newMessage.key = eventName.ToString();
-            newMessage.value = message["eventName"].ToString();
-            */
-
         }
     }
 }

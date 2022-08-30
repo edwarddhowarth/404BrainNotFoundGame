@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class CurrentLightIntensity : MonoBehaviour
+public class CurrentLightIntensity : MonoBehaviour, IIlluminable
 {
     private float lightIntensity;
     public List<float> incommingLight;
@@ -12,7 +12,17 @@ public class CurrentLightIntensity : MonoBehaviour
     void Start()
     {
         incommingLight = new List<float>();
-        EventManager.StartListening(EventManager.EventType.InLight, addLightSourceIntensity);
+        EventManager.StartListening(EventManager.EventType.LightIntensity, addLightSourceIntensity);
+    }
+
+    public string getName()
+    {
+        return gameObject.name;
+    }
+
+    public Vector3 getCurrentPosition()
+    {
+        return transform.position;
     }
 
     // Update is called once per frame
@@ -22,7 +32,7 @@ public class CurrentLightIntensity : MonoBehaviour
         lightIntensity = calcIntensity();
         sendIntensity();
 
-        //Debug.Log("Light on player: " + lightIntensity);
+        Debug.Log("Light on player: " + lightIntensity);
 
         //Debug.Log("Individual Light Sources intensity on player: " + string.Join(", ", incommingLight));
 
@@ -56,9 +66,15 @@ public class CurrentLightIntensity : MonoBehaviour
 
     public void addLightSourceIntensity(Dictionary<string, object> message)
     {
-        if(message["intensity"] is float)
+        if(message.Count >= 2 && message["name"] is string && message["intensity"] is float)
         {
-            incommingLight.Add((float)message["intensity"]);
+            string name = (string)message["name"];
+            float intensity = (float)message["intensity"];
+            if (name == gameObject.name)
+            {
+                incommingLight.Add(intensity);
+            }
+            
         }
     }
 }
