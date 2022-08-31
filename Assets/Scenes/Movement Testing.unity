@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1076,6 +1076,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1041412851}
+  - component: {fileID: 1041412853}
+  - component: {fileID: 1041412852}
   m_Layer: 0
   m_Name: Armature.001
   m_TagString: Untagged
@@ -1104,6 +1106,42 @@ Transform:
   m_Father: {fileID: 2002056791}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1041412852
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1041412850}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e1673125c9658ff4c8d0230e5d521612, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1041412853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1041412850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 412120b8a9227c447a055e4db116d0ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  acceleration: 2
+  deceleration: 2
+  maxWalkVelocity: 0.5
+  maxRunVelocity: 2
 --- !u!1 &1083024549
 GameObject:
   m_ObjectHideFlags: 0
@@ -1983,7 +2021,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: -2156656019270121527, guid: b0b936d2837017c4e9e239e302c45cc1, type: 3}
+  m_Mesh: {fileID: -2156656019270121527, guid: 3cce474493a1a1842a8c60bf7c599da5, type: 3}
   m_Bones:
   - {fileID: 141498573}
   - {fileID: 2137385041}
@@ -2451,7 +2489,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2002056785}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 9000000, guid: b0b936d2837017c4e9e239e302c45cc1, type: 3}
   m_Controller: {fileID: 9100000, guid: d4ed0aed7f62b7f4bb453f6bc28c1821, type: 2}
   m_CullingMode: 1
