@@ -1078,7 +1078,6 @@ GameObject:
   - component: {fileID: 1041412851}
   - component: {fileID: 1041412853}
   - component: {fileID: 1041412852}
-  - component: {fileID: 1041412854}
   m_Layer: 0
   m_Name: Armature.001
   m_TagString: Untagged
@@ -1134,7 +1133,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1041412850}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 412120b8a9227c447a055e4db116d0ca, type: 3}
   m_Name: 
@@ -1143,21 +1142,6 @@ MonoBehaviour:
   deceleration: 2
   maxWalkVelocity: 0.5
   maxRunVelocity: 2
---- !u!111 &1041412854
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1041412850}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: bd1c79a8f4bad0b4488a4a4f458440dd, type: 2}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &1083024549
 GameObject:
   m_ObjectHideFlags: 0
@@ -2461,7 +2445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73fbf3aa05f6be24780438449f505aa3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useRootMotion: 1
+  useRootMotion: 0
   rotateByWorld: 0
   useContinuousSprint: 1
   sprintOnlyFree: 1
