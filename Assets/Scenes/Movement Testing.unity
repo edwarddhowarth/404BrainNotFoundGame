@@ -1078,6 +1078,7 @@ GameObject:
   - component: {fileID: 1041412851}
   - component: {fileID: 1041412853}
   - component: {fileID: 1041412852}
+  - component: {fileID: 1041412854}
   m_Layer: 0
   m_Name: Armature.001
   m_TagString: Untagged
@@ -1133,7 +1134,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1041412850}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 412120b8a9227c447a055e4db116d0ca, type: 3}
   m_Name: 
@@ -1142,6 +1143,21 @@ MonoBehaviour:
   deceleration: 2
   maxWalkVelocity: 0.5
   maxRunVelocity: 2
+--- !u!111 &1041412854
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1041412850}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: bd1c79a8f4bad0b4488a4a4f458440dd, type: 2}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1083024549
 GameObject:
   m_ObjectHideFlags: 0
@@ -2373,6 +2389,7 @@ GameObject:
   - component: {fileID: 2002056788}
   - component: {fileID: 2002056787}
   - component: {fileID: 2002056786}
+  - component: {fileID: 2002056792}
   m_Layer: 0
   m_Name: vBasicController_MainChar 1
   m_TagString: Player
@@ -2444,7 +2461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73fbf3aa05f6be24780438449f505aa3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useRootMotion: 0
+  useRootMotion: 1
   rotateByWorld: 0
   useContinuousSprint: 1
   sprintOnlyFree: 1
@@ -2490,8 +2507,8 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2002056785}
   m_Enabled: 0
-  m_Avatar: {fileID: 9000000, guid: b0b936d2837017c4e9e239e302c45cc1, type: 3}
-  m_Controller: {fileID: 9100000, guid: d4ed0aed7f62b7f4bb453f6bc28c1821, type: 2}
+  m_Avatar: {fileID: 9000000, guid: 3cce474493a1a1842a8c60bf7c599da5, type: 3}
+  m_Controller: {fileID: 9100000, guid: e1673125c9658ff4c8d0230e5d521612, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -2518,6 +2535,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2002056792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002056785}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 412120b8a9227c447a055e4db116d0ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  acceleration: 2
+  deceleration: 2
+  maxWalkVelocity: 0.5
+  maxRunVelocity: 2
 --- !u!1 &2090266729
 GameObject:
   m_ObjectHideFlags: 0
