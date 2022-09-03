@@ -631,9 +631,9 @@ ModelImporter:
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
+      keepOriginalPositionY: 0
       keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -1265,13 +1265,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
+      loopBlendOrientation: 1
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 0
       keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -4117,7 +4117,8 @@ ModelImporter:
     - name: Foot.L_end
       parentName: Foot.L
       position: {x: 0.000000006888612, y: 0.23572004, z: 0.000000008867197}
-      rotation: {x: 0.000000014901141, y: 0.0000000079996845, z: -0.000000047411625, w: 1}
+      rotation: {x: 0.000000014901141, y: 0.0000000079996845, z: -0.000000047411625,
+        w: 1}
       scale: {x: 1, y: 0.9999999, z: 0.99999994}
     - name: Foot.L_end_end
       parentName: Foot.L_end
@@ -4142,7 +4143,8 @@ ModelImporter:
     - name: Foot.R_end
       parentName: Foot.R
       position: {x: -0.0000000070447546, y: 0.23572004, z: 0.0000000065068946}
-      rotation: {x: 0.00000001490114, y: -0.0000000079997875, z: 0.000000047411618, w: 1}
+      rotation: {x: 0.00000001490114, y: -0.0000000079997875, z: 0.000000047411618,
+        w: 1}
       scale: {x: 1, y: 0.9999999, z: 0.99999994}
     - name: Foot.R_end_end
       parentName: Foot.R_end
