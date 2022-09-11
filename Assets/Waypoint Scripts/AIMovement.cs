@@ -23,5 +23,6 @@ public class AIMovement : MonoBehaviour
         Vector3 targetDirection = (target.transform.position - transform.position).normalized;
         Quaternion dir = Quaternion.LookRotation(targetDirection, Vector3.up);
         agent.transform.rotation = Quaternion.Lerp(transform.rotation, dir, 5f * Time.deltaTime);
+
     }
 }
