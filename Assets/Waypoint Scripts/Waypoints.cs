@@ -75,6 +75,7 @@ public class Waypoints : MonoBehaviour
         
         GameObject newWaypoint = new GameObject("Waypoint " + _waypoints);
         newWaypoint.transform.parent = transform;
+        newWaypoint.AddComponent<WaypointNode>();
         _waypoints++;
     }
 #endif
@@ -117,6 +118,7 @@ public class Waypoints : MonoBehaviour
 
         return waypoint;
     }
+
 
 
 

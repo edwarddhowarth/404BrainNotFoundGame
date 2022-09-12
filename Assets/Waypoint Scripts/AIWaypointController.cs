@@ -6,6 +6,7 @@ using UnityEngine.AI;
 //Handles getting waypoints
 //need to add a way to easily change between waypoints.
 
+[RequireComponent(typeof(CapsuleCollider))]
 public class AIWaypointController : MonoBehaviour
 {
     //Stores reference to waypoint
@@ -66,6 +67,16 @@ public class AIWaypointController : MonoBehaviour
     {
         _currentWaypoint = waypoints.GetClosestWaypoint(transform);
 
+    }
+
+    public void ChangeWaypointGroup(string name)
+    {
+        GameObject wp = WaypointManager.GetWaypointGroupByName(name);
+        if(wp != null )
+        {
+            waypoints = wp.GetComponent<Waypoints>();
+        }
+        
     }
 
 

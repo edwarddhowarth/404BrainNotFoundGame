@@ -23,6 +23,8 @@ public class AIAnimationController : MonoBehaviour
     int Speed;
     int LookMoveAngle;
 
+    Transform spine;
+    Transform neck;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +38,9 @@ public class AIAnimationController : MonoBehaviour
         Speed = Animator.StringToHash("Speed");
         LookMoveAngle = Animator.StringToHash("Look Move Angle");
 
+        spine = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0);
+        neck = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0);
+
     }
 
     // Update is called once per frame
@@ -45,7 +50,7 @@ public class AIAnimationController : MonoBehaviour
 
         lookDir = transform.forward;
 
-        Debug.Log("Movement Direction: " + movementDirection + "\nLook Direction: " + lookDir);
+        //Debug.Log("Movement Direction: " + movementDirection + "\nLook Direction: " + lookDir);
 
         float angle = Vector3.Angle(lookDir, movementDirection);
 
@@ -54,7 +59,7 @@ public class AIAnimationController : MonoBehaviour
         if (cross.y < 0)
             angle = -angle;
 
-        Debug.Log(angle);
+        //Debug.Log(angle);
 
         Debug.DrawRay(transform.position, lookDir * 100 ,Color.red);
 
@@ -68,7 +73,9 @@ public class AIAnimationController : MonoBehaviour
             angle = angle/360;
         }
 
-        if(angle != .5)
+        angle -= .5f;
+
+        if(angle > .6 || angle < .4)
         {
             isStrafing = true;
         }
@@ -99,20 +106,22 @@ public class AIAnimationController : MonoBehaviour
     {
         if (aimc.lookAt)
         {
-            Transform spine = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0);
-            //spine.LookAt(aimc.enemy.transform);
 
             if(Vector3.Angle(transform.forward, aimc.enemy.transform.position) < 70)
+            {
+                Quaternion playerDirection = Quaternion.LookRotation((aimc.enemy.transform.position - transform.position).normalized, Vector3.up);
+                neck.rotation = playerDirection;
+                Debug.DrawLine(neck.position, (aimc.enemy.transform.position - neck.position).normalized * 100, Color.black);
+                Debug.Log((aimc.enemy.transform.position - neck.position).normalized);
+            }
+            else if(Vector3.Angle(transform.forward, aimc.enemy.transform.position) < 100)
             {
                 Quaternion playerDirection = Quaternion.LookRotation((aimc.enemy.transform.position - transform.position).normalized, Vector3.up);
                 spine.rotation = playerDirection;
                 Debug.DrawLine(spine.position, (aimc.enemy.transform.position - spine.position).normalized * 100, Color.black);
                 Debug.Log((aimc.enemy.transform.position - spine.position).normalized);
-            }
-            else if(Vector3.Angle(transform.forward, aimc.enemy.transform.position) < 120)
-            {
-                Transform neck = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0);
-                Quaternion playerDirection = Quaternion.LookRotation((aimc.enemy.transform.position - transform.position).normalized, Vector3.up);
+
+                playerDirection = Quaternion.LookRotation((aimc.enemy.transform.position - transform.position).normalized, Vector3.up);
                 neck.rotation = playerDirection;
                 Debug.DrawLine(neck.position, (aimc.enemy.transform.position - neck.position).normalized * 100, Color.black);
                 Debug.Log((aimc.enemy.transform.position - neck.position).normalized);

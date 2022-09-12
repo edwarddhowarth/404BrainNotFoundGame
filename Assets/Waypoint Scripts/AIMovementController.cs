@@ -6,8 +6,6 @@ using UnityEngine;
 //Need to change this and AIWaypointController as to decide when to choose a new waypoint is determined by the distance of the object's center to the center of the waypoint
 //This means large/tall objects require more slack (distance can be higher) compared to smaller objects which would be closer to the waypoint
 
-[RequireComponent(typeof(AIWaypointController))]
-[RequireComponent(typeof(AIAnimationController))]
 public class AIMovementController : MonoBehaviour
 {
     public bool lookAt; //Look at object rather than look forward
@@ -18,8 +16,23 @@ public class AIMovementController : MonoBehaviour
 
     NavMeshAgent agent;
 
-    public float maxSpeed;
+    public float patrolMaxSpeed;
+    public float patrolAcceleration;
+
+    public float searchMaxSpeed;
+    public float searchAcceleration;
+
+    public float combatMaxSpeed;
+    public float combatAcceleration;
+
     public float maxTurnSpeed;
+
+    bool waiting = false;
+
+    private Vector3 currentWaypoint;
+
+
+    float nextWaitTime;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,42 +40,95 @@ public class AIMovementController : MonoBehaviour
 
         agent = GetComponent<NavMeshAgent>();
 
-        maxSpeed = agent.speed;
-        maxTurnSpeed = agent.angularSpeed;
+        //maxSpeed = agent.speed;
+        //maxTurnSpeed = agent.angularSpeed;
+
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*
-        if(!agent.hasPath)
+        //Debug.Log(WaypointManager.GetWaypointGroupByName("WaypointGroup1").name + " " + WaypointManager.GetWaypointGroupByName("WaypointGroup2").name);
+        //Really need to refactor and encapsulate things so they can be reused. currently things have dependencies which wont work.
+        //Need to uncouple LookAt from enemy and add a function that will cancel a coroutine if the AI detects something so it can instantly change state.
+
+        if (waiting == false && aiwc.currentWaypoint.position != currentWaypoint)
         {
-            agent.destination = aiwc.currentWaypoint.position;
+            StartCoroutine(WaitAtWaypointCoroutine());
         }
 
-        if(Vector3.Distance(transform.position, aiwc.currentWaypoint.position) < 10f)
-        {
-            agent.destination = aiwc.currentWaypoint.position;
-        }
+        Debug.DrawRay(transform.position, (aiwc.currentWaypoint.position - transform.position).normalized * 100);
 
-        */
-        agent.destination = aiwc.currentWaypoint.position;
+    }
 
-        /*
-        if (lookAt)
+    IEnumerator WaitAtWaypointCoroutine()
+    {
+        waiting = true;
+        Debug.Log("next waypoint angle: " + calculateWaypointAngles(aiwc.currentWaypoint.position) + "\nForward direction: " + transform.forward + "Waypoint Location:" + (aiwc.currentWaypoint.position - transform.forward).normalized);
+        float angleToNextWaypoint = calculateWaypointAngles(aiwc.currentWaypoint.position);
+        if (angleToNextWaypoint > 15)
         {
-            agent.updateRotation = false;
-            Vector3 targetDirection = (enemy.transform.position - transform.position).normalized;
-            Quaternion dir = Quaternion.LookRotation(targetDirection, Vector3.up);
-            agent.transform.rotation = Quaternion.Lerp(transform.rotation, dir, 5f * Time.deltaTime);
+            angleToNextWaypoint = (angleToNextWaypoint / 120f) + nextWaitTime;
+            Debug.Log(angleToNextWaypoint+ " second wait");
+            
+            StartCoroutine(RotateTowardsWaypoint(angleToNextWaypoint));
+            yield return new WaitForSeconds(angleToNextWaypoint);
+           
         }
         else
         {
-            agent.updateRotation = true;
+            Debug.Log(".5f second wait");
+            yield return new WaitForSeconds(.25f+ nextWaitTime);
         }
-        */
-        //Vector3 targetDirection = (target.transform.position - transform.position).normalized;
-        //Quaternion dir = Quaternion.LookRotation(targetDirection, Vector3.up);
-        //agent.transform.rotation = Quaternion.Lerp(transform.rotation, dir, 5f * Time.deltaTime);
+        
+        agent.destination = aiwc.currentWaypoint.position;
+        if(aiwc.currentWaypoint.gameObject.GetComponent<WaypointNode>() != null)
+        {
+            nextWaitTime = aiwc.currentWaypoint.gameObject.GetComponent<WaypointNode>().additionalWaitTime;
+        }
+        else
+        {
+            nextWaitTime = 0;
+        }
+        currentWaypoint = aiwc.currentWaypoint.position;
+        waiting = false;
     }
+
+    IEnumerator RotateTowardsWaypoint(float waitTime)
+    {
+        float time = 0;
+        while (time < waitTime)
+        {
+            agent.updateRotation = false;
+            if (waitTime > 1f && time > waitTime-.5f)
+            {
+                
+                Debug.Log("Turning on spot: " + time);
+                float speed = 2f * Time.deltaTime;
+                transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, aiwc.currentWaypoint.position - transform.position, speed, 0.0f));
+
+                
+            }
+
+            time += Time.deltaTime;
+            yield return null;
+        }
+        agent.updateRotation = true;
+        yield return null;
+        
+    }
+
+    private float calculateWaypointAngles(Vector3 next)
+    {
+        float currentToNextAngle = Vector3.Angle(transform.forward,(next - transform.position).normalized);
+        
+        return currentToNextAngle;
+    }
+
+    public void CancelWaypointMovement()
+    {
+        agent.destination = transform.position;
+    }
+
 }

@@ -122,7 +122,7 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-    //If this camera detects the player, send a message to all other objects notifying they have been detected
+    //Listens for all incoming player light values. If it is high enough and the player is in the field of view, it will start tracking the player
     private void PlayerDetection(Dictionary<string, object> message)
     {
         //Debug.Log("player being checked for detection");
