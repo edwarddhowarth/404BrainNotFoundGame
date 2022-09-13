@@ -24,7 +24,7 @@ public class EventManager : MonoBehaviour
         PlayerPosition,
         InCameraView,
         LightIntensity,
-        PlayerLightIntensity,
+        ObjectLightIntensity,
         PlayerDetected,
     }
 

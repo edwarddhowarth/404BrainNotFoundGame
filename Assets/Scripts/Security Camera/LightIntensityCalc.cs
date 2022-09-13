@@ -8,33 +8,9 @@ using UnityEngine.Events;
 //Angle Script
 //http://answers.unity.com/comments/1202706/view.html
 
-//Currently it only gets the intensity for the player object
-//Really it needs to first find out what is in range of the light and what type of objects should be calculated
-//Then it should calculate the light intensity and then send a dictionary with 2 values
-//The name of the object and the intensity
-
-//NEED
-//name of object for message
-//Position to calculate raycast
-
-//Probably a oversized box collider based on the range and diameter of the point light that only IIlluminable objects will trigger
-//Or just do a sphere collider since we just need to get information about IIlluminable Location and dont care about precision
-
-//I assume performance is fine for heaps of box colliders/Sphere only looking for a specific object overlap
-//We only care about checking if it is possible to be illuminated and not if they actually are which is what the raycast implement does
-//We only want to know if there is an IIlluminable within range
-
-//Raycast requires a direction to cast to and we dont know the player location without getting it first
-//Raycast is also much more expensive compared to a box/sphere collider so you cant just cast everywhere and try to find an IIlluminable
 
 
-//As the Collider works on fixed time, its not going to update as much as the other scripts and so there will be times where IIlluminable not be illuminated and thus break detection
-//Should check if IIlluminable is inside and then store a reference
-//Then when the collider updates again, check if the IIlluminable is still inside and if not, remove from reference list.
-
-/*
- * Uses a sphere collider to 
- */
+// Add to light sources that you want to calculate the light intensity of objects within its light radius/range
 
 public class LightIntensityCalc : MonoBehaviour
 {
@@ -66,6 +42,8 @@ public class LightIntensityCalc : MonoBehaviour
         {
             if(o != null && o.gameObject && o.gameObject.GetComponent<IIlluminable>() != null)
             {
+
+                Debug.Log("illuminable hit");
                 Vector3 objectDirection = (o.transform.position - lighting.transform.position).normalized; //The direction from the enemy that faces towards the player in a Vector3 form
                 RaycastHit hit;
 

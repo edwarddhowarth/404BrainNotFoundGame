@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class CameraViewDetection : MonoBehaviour
 {
+    [HideInInspector]
     public float cameraFOV;
+
     GameObject player;
     Vector3 initalCameraRotation;
     float cameraAspectRatio;
 
+    [HideInInspector]
     public bool playerInFieldOfView;
 
     Camera cam;

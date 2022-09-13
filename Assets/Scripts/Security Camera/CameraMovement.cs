@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     public bool loopRotationList = true;
+    public float MaxTrackingAngle = 30f;
 
     Vector3 startingRotation;
 
@@ -17,6 +18,9 @@ public class CameraMovement : MonoBehaviour
     Vector3 lookAt;
 
     CameraViewDetection camView;
+
+
+   
 
     //bool coroutineRunning = false;
     IEnumerator co = null;
@@ -33,7 +37,8 @@ public class CameraMovement : MonoBehaviour
             temp = v + startingRotation;
             taskQueue.Enqueue(temp);
         }
-        EventManager.StartListening(EventManager.EventType.PlayerLightIntensity, PlayerDetection);
+        EventManager.StartListening(EventManager.EventType.ObjectLightIntensity, PlayerDetection);
+
     }
 
     // Update is called once per frame
@@ -82,8 +87,35 @@ public class CameraMovement : MonoBehaviour
                     Vector3 playerRotation = lookAt;
                     Vector3 lookAtDirection = (playerRotation - cameraRotation).normalized;
                     Quaternion playerDirection = Quaternion.LookRotation(lookAtDirection, Vector3.up);
+
+                    //float XPosAngle = Vector3.Angle(startingRotation.normalized, new Vector3(PositiveRotationLock.x, 0f, 0f).normalized - )
+                    //float XNegAngle = Vector3.Angle((startingRotation + new Vector3(NegativeRotationLock.x, 0f, 0f)).normalized, startingRotation.normalized);
+                    //Debug.Log("Max Angle: " + (startingRotation.normalized + new Vector3(PositiveRotationLock.x, 0f, 0f).normalized).normalized + " Start Angle: " + startingRotation.normalized);
+
+                    //Debug.Log("Pos Angle: " + XPosAngle + " Neg Angle: " + XNegAngle); 
+
+
                     //Debug.Log("Look at: " + lookAtDirection + "\nPlayer Direction: " + playerDirection);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, playerDirection, 1f * Time.deltaTime);
+                    /*
+                    Debug.Log("X: " + transform.rotation.eulerAngles.x + " X Pos Max: " + (startingRotation.x + PositiveRotationLock.x) + " X Neg Max: " + (startingRotation.x + NegativeRotationLock.x));
+                    Debug.Log("Y: " + transform.rotation.eulerAngles.y + " Y Pos Max: " + (startingRotation.y + PositiveRotationLock.y) + " Y Neg Max: " + (startingRotation.y + NegativeRotationLock.y));
+                    Debug.Log("Z: " + transform.rotation.eulerAngles.z + " Z Pos Max: " + (startingRotation.z + PositiveRotationLock.z) + " Z Neg Max: " + (startingRotation.z + NegativeRotationLock.z));
+                    if ((transform.rotation.eulerAngles.x <= (startingRotation.x + PositiveRotationLock.x) && transform.rotation.eulerAngles.x >= (startingRotation.x + NegativeRotationLock.x))
+                        && (transform.rotation.eulerAngles.y <=(startingRotation.y + PositiveRotationLock.y ) && transform.rotation.eulerAngles.y >= (startingRotation.y + NegativeRotationLock.y))
+                        && (transform.rotation.eulerAngles.z <= (startingRotation.z + PositiveRotationLock.z) && transform.rotation.eulerAngles.z >= (startingRotation.z + NegativeRotationLock.z)))
+
+                    */
+
+
+                    {
+                        Quaternion newRotation = Quaternion.Lerp(transform.rotation, playerDirection, 1f * Time.deltaTime);
+                        if (Quaternion.Angle(newRotation, Quaternion.Euler(startingRotation)) < MaxTrackingAngle)
+                        {
+                            transform.rotation = newRotation;
+                        }
+                        
+                    }
+                    
                     //Debug.Log("player detected by camera");
                 }
                 else
@@ -126,13 +158,17 @@ public class CameraMovement : MonoBehaviour
     private void PlayerDetection(Dictionary<string, object> message)
     {
         //Debug.Log("player being checked for detection");
-        if (message["playerIntensity"] is float)
+        if (message["objectName"] is string && message["objectTag"] is string && message["objectIntensity"] is float && message["objectLocation"] is Vector3)
         {
+            string name = (string)message["objectName"];
+            string tag = (string)message["objectTag"];
+            float intensity = (float)message["objectIntensity"];
+            Vector3 location = (Vector3)message["objectLocation"];
             //Debug.Log("intensity: " + (float)message["playerIntensity"] + "\nPlayer Detection Script Angle: " + Vector3.Angle((Vector3)message["playerLocation"] - transform.position, transform.forward));
-            if ((float)message["playerIntensity"] > .05f && camView.playerInFieldOfView)
+            if (tag == "Player" && intensity> .05f && camView.playerInFieldOfView)
             {
                 playerDetected = true;
-                lookAt = (Vector3)message["playerLocation"];
+                lookAt = location;
                 //Debug.Log("player detected");
 
             }

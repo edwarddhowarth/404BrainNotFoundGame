@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+// Attach to any object you want to have a light intensity value
+
 public class CurrentLightIntensity : MonoBehaviour, IIlluminable
 {
     private float lightIntensity;
@@ -57,10 +59,12 @@ public class CurrentLightIntensity : MonoBehaviour, IIlluminable
 
     public void sendIntensity()
     {
-        EventManager.TriggerEvent(EventManager.EventType.PlayerLightIntensity, 
-            new Dictionary<string, object> { 
-            { "playerIntensity", lightIntensity }, 
-            { "playerLocation", transform.position } 
+        EventManager.TriggerEvent(EventManager.EventType.ObjectLightIntensity, 
+            new Dictionary<string, object> {
+            { "objectName", gameObject.name },
+            { "objectTag", gameObject.tag },
+            { "objectIntensity", lightIntensity }, 
+            { "objectLocation", transform.position } 
         });
     }
 

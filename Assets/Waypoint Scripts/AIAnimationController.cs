@@ -18,11 +18,14 @@ public class AIAnimationController : MonoBehaviour
 
     bool isStrafing;
 
+    
+
     int Strafing;
 
     int Speed;
     int LookMoveAngle;
 
+    public bool animateLookAt;
     Transform spine;
     Transform neck;
 
@@ -38,8 +41,12 @@ public class AIAnimationController : MonoBehaviour
         Speed = Animator.StringToHash("Speed");
         LookMoveAngle = Animator.StringToHash("Look Move Angle");
 
-        spine = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0);
-        neck = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0);
+        if(animateLookAt)
+        {
+            spine = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0);
+            neck = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0);
+        }
+        
 
     }
 
@@ -104,7 +111,7 @@ public class AIAnimationController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (aimc.lookAt)
+        if (animateLookAt && aimc.lookAt)
         {
 
             if(Vector3.Angle(transform.forward, aimc.enemy.transform.position) < 70)
