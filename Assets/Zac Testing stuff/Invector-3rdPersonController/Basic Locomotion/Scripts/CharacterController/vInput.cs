@@ -233,7 +233,8 @@ namespace Invector.vCharacterController
     /// <summary>
     /// INPUT TYPE - check in real time if you are using a joystick, mobile or mouse/keyboard
     /// </summary>
-    [HideInInspector]
+   [HideInInspector]
+   // [SerializeField]
     public enum InputDevice
     {
         MouseKeyboard,
@@ -478,11 +479,11 @@ namespace Invector.vCharacterController
                 }
             }
             // joystick
-            else if (inputDevice == InputDevice.Joystick)
-            {
-                if (Input.GetButtonDown(this.buttonName))
-                    return true;
-            }
+          //  else if (inputDevice == InputDevice.Joystick)
+            //{
+               // if (Input.GetButtonDown(this.buttonName))
+                 //   return true;
+           // }
             return false;
         }
 
