@@ -7,6 +7,7 @@ using UnityEngine.Events;
 
 public class CurrentLightIntensity : MonoBehaviour, IIlluminable
 {
+    public float threshold = 0.5f; //Threshold of how lit the object must be before it is detected
     private float lightIntensity;
     public List<float> incommingLight;
 
@@ -64,7 +65,8 @@ public class CurrentLightIntensity : MonoBehaviour, IIlluminable
             { "objectName", gameObject.name },
             { "objectTag", gameObject.tag },
             { "objectIntensity", lightIntensity }, 
-            { "objectLocation", transform.position } 
+            { "objectLocation", transform.position },
+            { "threshold", threshold }
         });
     }
 

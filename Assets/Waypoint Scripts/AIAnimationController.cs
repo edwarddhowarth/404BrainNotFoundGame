@@ -18,6 +18,9 @@ public class AIAnimationController : MonoBehaviour
 
     Vector3 previousFramePostion;
 
+    Vector3 preUpdateForward;
+    Vector3 preUpdatePosition;
+
     Animator animator;
     AIMovementController aimc;
 
@@ -30,6 +33,13 @@ public class AIAnimationController : MonoBehaviour
     int Speed;
     int LookMoveAngle;
 
+    float lookTime;
+    Quaternion currentHeadRotation;
+    Quaternion currentSpineRotation;
+    bool lookAtStart = false;
+    bool returningToCenterHead = false;
+
+    public bool animate = true;
     public bool animateLookAt;
     Transform spine;
     Transform neck;
@@ -61,6 +71,8 @@ public class AIAnimationController : MonoBehaviour
         movementDirection = (transform.position - previousFramePostion).normalized;
 
         lookDir = transform.forward;
+        preUpdateForward = lookDir;
+        preUpdatePosition = transform.position;
 
         //Debug.Log("Movement Direction: " + movementDirection + "\nLook Direction: " + lookDir);
 
@@ -109,38 +121,199 @@ public class AIAnimationController : MonoBehaviour
         previousFramePostion = transform.position;
     }
 
+    /*
     private void OnAnimatorIK(int layerIndex)
-    {
-        
-    }
-
-    private void LateUpdate()
     {
         if (animateLookAt && aimc.lookAt)
         {
-
-            if(Vector3.Angle(transform.forward, aimc.enemy.transform.position) < 70)
+            if (lookAtStart == false)
             {
-                Quaternion playerDirection = Quaternion.LookRotation((aimc.enemy.transform.position - transform.position).normalized, Vector3.up);
+                currentHeadRotation = neck.rotation;
+                lookAtStart = true;
+            }
+
+
+            //aimc.agent.updateRotation = false;
+            //Vector3 offset = (transform.rotation.eulerAngles - lookDir).normalized;
+
+            Vector3 targetDirection = (aimc.enemy.transform.position - transform.position).normalized;
+            Vector3 targetDirectionNeck = (aimc.enemy.transform.position - transform.position).normalized;
+            Vector3 targetDirectionSpine = (aimc.enemy.transform.position - spine.position).normalized;
+            Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.green);
+            Debug.DrawLine(preUpdatePosition, lookDir * 200, Color.cyan);
+            Debug.Log("head angle: " + Vector3.Angle(transform.forward, targetDirection));
+            if (Vector3.Angle(lookDir, targetDirection) < 90)
+            {
+                Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
+                Quaternion newRotation = Quaternion.Lerp(neck.rotation, playerDirection, 10f * Time.deltaTime);
+
+                //animator.SetBoneLocalRotation(HumanBodyBones.Head, playerDirection);
                 neck.rotation = playerDirection;
-                Debug.DrawLine(neck.position, (aimc.enemy.transform.position - neck.position).normalized * 100, Color.black);
+                Debug.Log("Look rotation:" + currentHeadRotation);
+                Debug.Log("Look quat:" + playerDirection);
+                Debug.Log("Look quat:" + (Quaternion.Inverse(currentHeadRotation) * newRotation));
+                Debug.DrawRay(animator.GetBoneTransform(HumanBodyBones.Head).position, targetDirectionNeck * 100f, Color.black);
+                currentHeadRotation = newRotation;
+            }
+            
+            //animator.SetBoneLocalRotation(HumanBodyBones.Head, Quaternion.Inverse(currentHeadRotation));
+        }
+        else
+        {
+            lookAtStart = false;
+            //neck.rotation = currentHeadRotation;
+            //animator.SetBoneLocalRotation(HumanBodyBones.Head, Quaternion.Inverse(currentHeadRotation) * Quaternion.LookRotation(transform.forward, Vector3.up));
+        }
+
+    }
+    */
+    
+
+    private void LateUpdate()
+    { 
+        if (animateLookAt && aimc.lookAt)
+        {
+            if (lookAtStart == false || returningToCenterHead == true) //if we are beginning to look at the object
+            {
+                currentHeadRotation = neck.rotation; //Get the neck's starting rotation which we will keep updating each frame till look at stops
+                currentSpineRotation = spine.rotation;
+                lookAtStart = true; //when this is false, 
+                returningToCenterHead = false;
+                lookTime = 0;
+            }
+            
+
+            //aimc.agent.updateRotation = false;
+            //Vector3 offset = (transform.rotation.eulerAngles - lookDir).normalized;
+
+            Vector3 targetDirection = (aimc.enemy.transform.position - transform.position).normalized;
+            Vector3 targetDirectionNeck = (aimc.enemy.transform.position - neck.position).normalized;
+            Vector3 targetDirectionSpine = (aimc.enemy.transform.position - spine.position).normalized;
+            Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.green);
+            Debug.DrawLine(preUpdatePosition, lookDir * 200, Color.cyan);
+            Debug.Log("head angle: " + Vector3.Angle(transform.forward, targetDirection));
+
+
+
+            if (Vector3.Angle(lookDir, targetDirection) < 45)
+            {
+                //return spine to center
+                Quaternion centerRotation = Quaternion.Lerp(currentSpineRotation, Quaternion.LookRotation(lookDir, Vector3.up), 6f * Time.deltaTime);
+                spine.rotation = centerRotation;
+                currentSpineRotation = centerRotation;
+
+                //Turn head
+                Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
+                Quaternion newRotation = Quaternion.Lerp(currentHeadRotation, playerDirection, 6f * Time.deltaTime);
+                Debug.Log("new rotation: " + newRotation);
+                neck.rotation = newRotation;
+                currentHeadRotation = newRotation;
+                Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.black);
                 Debug.Log((aimc.enemy.transform.position - neck.position).normalized);
             }
-            else if(Vector3.Angle(transform.forward, aimc.enemy.transform.position) < 100)
+            else if (Vector3.Angle(lookDir, targetDirection) < 90)
             {
-                Quaternion playerDirection = Quaternion.LookRotation((aimc.enemy.transform.position - transform.position).normalized, Vector3.up);
-                spine.rotation = playerDirection;
-                Debug.DrawLine(spine.position, (aimc.enemy.transform.position - spine.position).normalized * 100, Color.black);
+                //turn body
+                Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
+                Quaternion newRotation = Quaternion.Lerp(currentSpineRotation, playerDirection, 6f * Time.deltaTime);
+                Debug.Log("new rotation: " + newRotation);
+                spine.rotation = newRotation;
+                currentSpineRotation = newRotation;
+                Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.black);
+                Debug.Log((aimc.enemy.transform.position - neck.position).normalized);
+
+                //keep head rotation
+                playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
+                newRotation = Quaternion.Lerp(currentHeadRotation, playerDirection, 6f * Time.deltaTime);
+                Debug.Log("new rotation: " + newRotation);
+                neck.rotation = newRotation;
+                currentHeadRotation = newRotation;
+
+            }
+            else
+            {
+                
+                Quaternion centerRotation = Quaternion.Lerp(currentHeadRotation, Quaternion.LookRotation(lookDir, Vector3.up), 6f * Time.deltaTime);
+                /*
+                neck.rotation = centerRotation;
+                */
+                currentHeadRotation = centerRotation;
+              
+
+                centerRotation = Quaternion.Lerp(currentSpineRotation, Quaternion.LookRotation(lookDir, Vector3.up), 6f * Time.deltaTime);
+                spine.rotation = centerRotation;
+                currentSpineRotation = centerRotation;
+                  
+                //neck.rotation = currentHeadRotation;
+                //spine.rotation = currentSpineRotation;
+            }
+
+            /*
+            else if(Vector3.Angle(transform.forward, targetDirection) < 85)
+            {
+                Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
+                Quaternion newRotation = Quaternion.Lerp(neck.rotation, playerDirection, 100f * Time.deltaTime);
+                Debug.Log("new rotation: " + newRotation);
+                spine.rotation = newRotation;
+                currentSpineRotation = newRotation;
+                Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.black);
                 Debug.Log((aimc.enemy.transform.position - spine.position).normalized);
 
-                playerDirection = Quaternion.LookRotation((aimc.enemy.transform.position - transform.position).normalized, Vector3.up);
-                neck.rotation = playerDirection;
-                Debug.DrawLine(neck.position, (aimc.enemy.transform.position - neck.position).normalized * 100, Color.black);
+                playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
+                newRotation = Quaternion.Lerp(spine.rotation, playerDirection, 100f * Time.deltaTime);
+                Debug.Log("new rotation: " + newRotation);
+                neck.rotation = newRotation;
+                Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.black);
                 Debug.Log((aimc.enemy.transform.position - neck.position).normalized);
+            }
+            else
+            {
+                aimc.agent.updateRotation = true;
+
+                Quaternion moveDirection = Quaternion.LookRotation(movementDirection, Vector3.up);
+                Quaternion newRotation = Quaternion.Lerp(spine.rotation, moveDirection, 20f * Time.deltaTime);
+                spine.rotation = newRotation;
+
+                newRotation = Quaternion.Lerp(neck.rotation, moveDirection, 20f * Time.deltaTime);
+                neck.rotation = newRotation;
+
+            }
+
+            */
+        }
+        else if(animate)
+        {
+            
+            if (lookAtStart == true && lookTime < 2f)
+            {
+                lookTime += Time.deltaTime;
+                Quaternion newRotation = Quaternion.Lerp(currentHeadRotation, Quaternion.LookRotation(lookDir, Vector3.up), 6f * Time.deltaTime);
+                neck.rotation = newRotation;
+                currentHeadRotation = newRotation;
+
+                newRotation = Quaternion.Lerp(currentSpineRotation, Quaternion.LookRotation(lookDir, Vector3.up), 6f * Time.deltaTime);
+                spine.rotation = newRotation;
+                currentSpineRotation = newRotation;
+
+
+
+
+                Debug.Log("Turning back to forward");
+                returningToCenterHead = true;
+                
+            }
+            else
+            {
+                lookAtStart = false;
+                lookTime = 0f;
+                returningToCenterHead = false;
             }
 
             
+
+            
         }
+
     }
 
 }

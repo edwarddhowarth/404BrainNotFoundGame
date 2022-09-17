@@ -14,7 +14,7 @@ public class AIMovementController : MonoBehaviour
 
     private AIWaypointController aiwc;
 
-    NavMeshAgent agent;
+    public NavMeshAgent agent;
 
     public float patrolMaxSpeed;
     public float patrolAcceleration;

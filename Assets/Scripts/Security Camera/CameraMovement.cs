@@ -158,19 +158,24 @@ public class CameraMovement : MonoBehaviour
     private void PlayerDetection(Dictionary<string, object> message)
     {
         //Debug.Log("player being checked for detection");
-        if (message["objectName"] is string && message["objectTag"] is string && message["objectIntensity"] is float && message["objectLocation"] is Vector3)
+        if (message["objectName"] is string && message["objectTag"] is string && message["objectIntensity"] is float && message["objectLocation"] is Vector3 && message["threshold"] is float)
         {
             string name = (string)message["objectName"];
             string tag = (string)message["objectTag"];
             float intensity = (float)message["objectIntensity"];
             Vector3 location = (Vector3)message["objectLocation"];
+            float threshold = (float)message["threshold"];
             //Debug.Log("intensity: " + (float)message["playerIntensity"] + "\nPlayer Detection Script Angle: " + Vector3.Angle((Vector3)message["playerLocation"] - transform.position, transform.forward));
-            if (tag == "Player" && intensity> .05f && camView.playerInFieldOfView)
+            if (tag == "Player" && intensity > threshold && camView.playerInFieldOfView)
             {
                 playerDetected = true;
                 lookAt = location;
                 //Debug.Log("player detected");
 
+            }
+            else
+            {
+                playerDetected = false;
             }
         }
         

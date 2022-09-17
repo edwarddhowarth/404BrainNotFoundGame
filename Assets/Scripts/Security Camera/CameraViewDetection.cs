@@ -32,7 +32,6 @@ public class CameraViewDetection : MonoBehaviour
     void Update()
     {
         cameraFOV = cam.fieldOfView; //FOV may change during runtime
-
         /*
         var left = Quaternion.Euler(0,-30f,0) * transform.forward;
         var right = (transform.forward + (new Vector3(0, cameraFOV/2, 0f).normalized)).normalized;
