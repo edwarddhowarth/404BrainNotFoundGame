@@ -4,6 +4,11 @@ using UnityEngine;
 
 //Controls the animations for the AI and for rotations such as rotating spine/head so they are looking at the player/object
 
+
+// These could be useful
+// https://docs.unity3d.com/ScriptReference/Animator.SetBoneLocalRotation.html Needs to be in LateUpdate
+// https://forum.unity.com/threads/animator-setbonelocalrotation-clarification-needed.383680/
+
 // http://answers.unity.com/answers/181890/view.html for detirmining angle
 [RequireComponent(typeof(Animator))]
 public class AIAnimationController : MonoBehaviour

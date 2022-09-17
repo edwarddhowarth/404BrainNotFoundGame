@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 //Using Code from MetalStorm Games - Unity Basics - Waypoint path system in unity https://www.youtube.com/watch?v=EwHiMQ3jdHw
+//http://answers.unity.com/answers/1297614/view.html For displaying text above gizmos
 
 //Create using WaypointManager
 //Once created, you can add waypoints using a button in the inspector

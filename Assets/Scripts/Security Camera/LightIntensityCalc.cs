@@ -48,23 +48,32 @@ public class LightIntensityCalc : MonoBehaviour
                 RaycastHit hit;
 
 
-                if (lighting.type == LightType.Spot)
+                switch(lighting.type)
                 {
-                    if (Vector3.Angle(o.transform.position - transform.position, transform.forward) < lighting.spotAngle && Physics.Raycast(transform.position, objectDirection, out hit, Mathf.Infinity))
-                    {
-                        if (hit.collider.name == o.name)
+                    case LightType.Spot:
+                        if (Vector3.Angle(o.transform.position - transform.position, transform.forward) < lighting.spotAngle && Physics.Raycast(transform.position, objectDirection, out hit, Mathf.Infinity))
                         {
-                            //Debug.Log("drawing ray");
-                            //Debug.DrawRay(lighting.transform.position, playerDirection * Vector3.Distance(lighting.transform.position, player.transform.position), Color.yellow);
-                            intensity = lighting.intensity * (1 / Mathf.Pow(Vector3.Distance(lighting.transform.position, o.transform.position), 2));
-                            //Debug.Log(lighting.type);
-                            //Debug.Log(intensity);
-                            EventManager.TriggerEvent(EventManager.EventType.LightIntensity, new Dictionary<string, object> { { "name", o.name }, { "intensity", intensity } });
-                            Debug.Log(o.name + " intensity at: " + intensity);
+                            if (hit.collider.name == o.name)
+                            {
+                                //Debug.Log("drawing ray");
+                                //Debug.DrawRay(lighting.transform.position, playerDirection * Vector3.Distance(lighting.transform.position, player.transform.position), Color.yellow);
+                                intensity = lighting.intensity * (1 / Mathf.Pow(Vector3.Distance(lighting.transform.position, o.transform.position), 2));
+                                //Debug.Log(lighting.type);
+                                //Debug.Log(intensity);
+                                EventManager.TriggerEvent(EventManager.EventType.LightIntensity, new Dictionary<string, object> { { "name", o.name }, { "intensity", intensity } });
+                                Debug.Log(o.name + " intensity at: " + intensity);
+                            }
+
+
                         }
+                        break;
+                    case LightType.Point:
 
+                        break;
 
-                    }
+                    case LightType.Directional:
+
+                        break;
                 }
             }
            
