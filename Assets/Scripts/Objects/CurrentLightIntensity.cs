@@ -7,14 +7,13 @@ using UnityEngine.Events;
 
 public class CurrentLightIntensity : MonoBehaviour, IIlluminable
 {
-    public float threshold = 0.5f; //Threshold of how lit the object must be before it is detected
     private float lightIntensity;
-    public List<float> incommingLight;
+    private List<float> incomingLight;
 
     // Start is called before the first frame update
     void Start()
     {
-        incommingLight = new List<float>();
+        incomingLight = new List<float>();
         EventManager.StartListening(EventManager.EventType.LightIntensity, addLightSourceIntensity);
     }
 
@@ -35,20 +34,20 @@ public class CurrentLightIntensity : MonoBehaviour, IIlluminable
         lightIntensity = calcIntensity();
         sendIntensity();
 
-        Debug.Log("Light on player: " + lightIntensity);
+        //Debug.Log("Light on player: " + lightIntensity);
 
         //Debug.Log("Individual Light Sources intensity on player: " + string.Join(", ", incommingLight));
 
-        incommingLight.Clear();
+        incomingLight.Clear();
     }
 
     public float calcIntensity()
     {
         float intensity = 0;
 
-        if(incommingLight.Count > 0)
+        if(incomingLight.Count > 0)
         {
-            foreach (float i in incommingLight)
+            foreach (float i in incomingLight)
             {
                 intensity += i;
             }
@@ -65,8 +64,7 @@ public class CurrentLightIntensity : MonoBehaviour, IIlluminable
             { "objectName", gameObject.name },
             { "objectTag", gameObject.tag },
             { "objectIntensity", lightIntensity }, 
-            { "objectLocation", transform.position },
-            { "threshold", threshold }
+            { "objectLocation", transform.position }
         });
     }
 
@@ -78,7 +76,7 @@ public class CurrentLightIntensity : MonoBehaviour, IIlluminable
             float intensity = (float)message["intensity"];
             if (name == gameObject.name)
             {
-                incommingLight.Add(intensity);
+                incomingLight.Add(intensity);
             }
             
         }

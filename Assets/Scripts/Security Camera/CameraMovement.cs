@@ -19,16 +19,15 @@ public class CameraMovement : MonoBehaviour
 
     CameraViewDetection camView;
 
-
+    Vector3 startingForward;
    
 
-    //bool coroutineRunning = false;
     IEnumerator co = null;
     // Start is called before the first frame update
     void Start()
     {
         camView = GetComponentInChildren<CameraViewDetection>();
-
+        startingForward = transform.forward;
         taskQueue = new Queue<Vector3>();
         startingRotation = transform.rotation.eulerAngles;
         foreach(Vector3 v in rotationList)
@@ -52,15 +51,6 @@ public class CameraMovement : MonoBehaviour
         RaycastHit hit;
         
 
-        
-        //var leftAngle = Quaternion.LookRotation(left, transform.up);
-        
-        //var rightAngle = Quaternion.LookRotation(right, transform.up);
-
-        //Debug.DrawRay(transform.position, transform.forward * 1000f, Color.green);
-        
-
-
         if (playerDetected) //Player has visibily been detected by someone or something
         {
             if (co != null) //Ensure that we stop the scanning routine
@@ -69,11 +59,11 @@ public class CameraMovement : MonoBehaviour
                 co = null;
             }
             //Debug.Log("Angle from camera to detected thing: " + Vector3.Angle(lookAt - transform.position, transform.forward) + " and distance: " + Vector3.Distance(transform.position, lookAt) + "\nis raycast gunna work: " + Physics.Raycast(transform.position, (lookAt - transform.position + new Vector3(0f, .2f, 0f)).normalized, out hit, Mathf.Infinity) + "\nhit: " + hit.collider.name);
-            Debug.DrawRay(transform.position, (lookAt - transform.position).normalized * 1000f);
+            //Debug.DrawRay(transform.position, (lookAt - transform.position).normalized * 1000f);
 
-            Debug.DrawRay(transform.position, transform.forward * 1000f, Color.yellow);
-
-            if (Vector3.Angle(lookAt - transform.position, transform.forward) < camView.cameraFOV/2 && 
+            //Debug.DrawRay(transform.position, transform.forward * 1000f, Color.yellow);
+            //Debug.Log("angle: " + Vector3.Angle(lookAt - transform.position, startingForward));
+            if (Vector3.Angle(lookAt - transform.position, startingForward) < camView.cameraFOV/2 && 
                 Physics.Raycast(transform.position, (lookAt - transform.position + new Vector3 (0f, .2f,0f)).normalized, out hit, Mathf.Infinity)) // Check that the player would be in the field of view of the camera and that the player isnt obstructed
             {
                 if(hit.collider.tag == "Player")
@@ -87,24 +77,6 @@ public class CameraMovement : MonoBehaviour
                     Vector3 playerRotation = lookAt;
                     Vector3 lookAtDirection = (playerRotation - cameraRotation).normalized;
                     Quaternion playerDirection = Quaternion.LookRotation(lookAtDirection, Vector3.up);
-
-                    //float XPosAngle = Vector3.Angle(startingRotation.normalized, new Vector3(PositiveRotationLock.x, 0f, 0f).normalized - )
-                    //float XNegAngle = Vector3.Angle((startingRotation + new Vector3(NegativeRotationLock.x, 0f, 0f)).normalized, startingRotation.normalized);
-                    //Debug.Log("Max Angle: " + (startingRotation.normalized + new Vector3(PositiveRotationLock.x, 0f, 0f).normalized).normalized + " Start Angle: " + startingRotation.normalized);
-
-                    //Debug.Log("Pos Angle: " + XPosAngle + " Neg Angle: " + XNegAngle); 
-
-
-                    //Debug.Log("Look at: " + lookAtDirection + "\nPlayer Direction: " + playerDirection);
-                    /*
-                    Debug.Log("X: " + transform.rotation.eulerAngles.x + " X Pos Max: " + (startingRotation.x + PositiveRotationLock.x) + " X Neg Max: " + (startingRotation.x + NegativeRotationLock.x));
-                    Debug.Log("Y: " + transform.rotation.eulerAngles.y + " Y Pos Max: " + (startingRotation.y + PositiveRotationLock.y) + " Y Neg Max: " + (startingRotation.y + NegativeRotationLock.y));
-                    Debug.Log("Z: " + transform.rotation.eulerAngles.z + " Z Pos Max: " + (startingRotation.z + PositiveRotationLock.z) + " Z Neg Max: " + (startingRotation.z + NegativeRotationLock.z));
-                    if ((transform.rotation.eulerAngles.x <= (startingRotation.x + PositiveRotationLock.x) && transform.rotation.eulerAngles.x >= (startingRotation.x + NegativeRotationLock.x))
-                        && (transform.rotation.eulerAngles.y <=(startingRotation.y + PositiveRotationLock.y ) && transform.rotation.eulerAngles.y >= (startingRotation.y + NegativeRotationLock.y))
-                        && (transform.rotation.eulerAngles.z <= (startingRotation.z + PositiveRotationLock.z) && transform.rotation.eulerAngles.z >= (startingRotation.z + NegativeRotationLock.z)))
-
-                    */
 
 
                     {
@@ -158,20 +130,18 @@ public class CameraMovement : MonoBehaviour
     private void PlayerDetection(Dictionary<string, object> message)
     {
         //Debug.Log("player being checked for detection");
-        if (message["objectName"] is string && message["objectTag"] is string && message["objectIntensity"] is float && message["objectLocation"] is Vector3 && message["threshold"] is float)
+        if (message["objectName"] is string && message["objectTag"] is string && message["objectIntensity"] is float && message["objectLocation"] is Vector3)
         {
             string name = (string)message["objectName"];
             string tag = (string)message["objectTag"];
             float intensity = (float)message["objectIntensity"];
             Vector3 location = (Vector3)message["objectLocation"];
-            float threshold = (float)message["threshold"];
             //Debug.Log("intensity: " + (float)message["playerIntensity"] + "\nPlayer Detection Script Angle: " + Vector3.Angle((Vector3)message["playerLocation"] - transform.position, transform.forward));
-            if (tag == "Player" && intensity > threshold && camView.playerInFieldOfView)
+            if (tag == "Player" && intensity > camView.MinimumLightDetection && camView.playerInFieldOfView)
             {
                 playerDetected = true;
                 lookAt = location;
                 //Debug.Log("player detected");
-
             }
             else
             {

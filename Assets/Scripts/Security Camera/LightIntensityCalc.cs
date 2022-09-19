@@ -28,9 +28,8 @@ public class LightIntensityCalc : MonoBehaviour
     float intensity;
     void Start()
     {
-        //player = GameObject.FindGameObjectWithTag("Player");
+
         lighting = GetComponent<Light>();
-        //illuminables = new List<GameObject>();
         illuminables = new Collider[maxColliders];
         
     }
@@ -43,7 +42,7 @@ public class LightIntensityCalc : MonoBehaviour
             if(o != null && o.gameObject && o.gameObject.GetComponent<IIlluminable>() != null)
             {
 
-                Debug.Log("illuminable hit");
+                //Debug.Log("illuminable hit");
                 Vector3 objectDirection = (o.transform.position - lighting.transform.position).normalized; //The direction from the enemy that faces towards the player in a Vector3 form
                 RaycastHit hit;
 
@@ -61,19 +60,30 @@ public class LightIntensityCalc : MonoBehaviour
                                 //Debug.Log(lighting.type);
                                 //Debug.Log(intensity);
                                 EventManager.TriggerEvent(EventManager.EventType.LightIntensity, new Dictionary<string, object> { { "name", o.name }, { "intensity", intensity } });
-                                Debug.Log(o.name + " intensity at: " + intensity);
+                                //Debug.Log(o.name + " intensity at: " + intensity);
                             }
 
 
                         }
                         break;
                     case LightType.Point:
+                        if (Physics.Raycast(transform.position, objectDirection, out hit, Mathf.Infinity))
+                        {
+                            if (hit.collider.name == o.name)
+                            {
+                                //Debug.Log("drawing ray");
+                                //Debug.DrawRay(lighting.transform.position, playerDirection * Vector3.Distance(lighting.transform.position, player.transform.position), Color.yellow);
+                                intensity = lighting.intensity * (1 / Mathf.Pow(Vector3.Distance(lighting.transform.position, o.transform.position), 2));
+                                //Debug.Log(lighting.type);
+                                //Debug.Log(intensity);
+                                EventManager.TriggerEvent(EventManager.EventType.LightIntensity, new Dictionary<string, object> { { "name", o.name }, { "intensity", intensity } });
+                                //Debug.Log(o.name + " intensity at: " + intensity);
+                            }
 
+
+                        }
                         break;
 
-                    case LightType.Directional:
-
-                        break;
                 }
             }
            
@@ -97,7 +107,7 @@ public class LightIntensityCalc : MonoBehaviour
         {
             if(o != null)
             {
-                Debug.Log(numColliders + " " + o.name + " " + o.GetInstanceID());
+                //Debug.Log(numColliders + " " + o.name + " " + o.GetInstanceID());
             }
             
         }
