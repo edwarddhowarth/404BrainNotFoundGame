@@ -17,8 +17,8 @@ namespace Invector.vCharacterController
         [Header("Uncheck if you need to use the cursor")]
         public bool unlockCursorOnStart = false;
         public bool showCursorOnStart = false;
-        public GenericInput horizontalInput = new GenericInput("Horizontal", "LeftAnalogHorizontal", "Horizontal");
-        public GenericInput verticallInput = new GenericInput("Vertical", "LeftAnalogVertical", "Vertical");
+        public GenericInput horizontalInput = new GenericInput("Horizontal", "Horizontal", "Horizontal");
+        public GenericInput verticallInput = new GenericInput("Vertical", "Vertical", "Vertical");
         public GenericInput jumpInput = new GenericInput("Space", "X", "X");
         public GenericInput rollInput = new GenericInput("Q", "B", "B");
         public GenericInput strafeInput = new GenericInput("Tab", "RightStickClick", "RightStickClick");
@@ -35,8 +35,8 @@ namespace Invector.vCharacterController
 
         [vEditorToolbar("Inputs")]
         [Header("Camera Input")]
-        public GenericInput rotateCameraXInput = new GenericInput("Mouse X", "RightAnalogHorizontal", "Mouse X");
-        public GenericInput rotateCameraYInput = new GenericInput("Mouse Y", "RightAnalogVertical", "Mouse Y");
+        public GenericInput rotateCameraXInput = new GenericInput("Mouse X", "Horizontal", "Mouse X");
+        public GenericInput rotateCameraYInput = new GenericInput("Mouse Y", "Vertical", "Mouse Y");
         public GenericInput cameraZoomInput = new GenericInput("Mouse ScrollWheel", "", "");
         [HideInInspector]
         public vCamera.vThirdPersonCamera tpCamera;              // acess camera info      
