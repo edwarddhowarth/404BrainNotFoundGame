@@ -4,12 +4,25 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
+    [Header("Movement")]
+    [Tooltip("Loop the Rotation List")]
     public bool loopRotationList = true;
-    public float MaxTrackingAngle = 30f;
+    [Tooltip("How fast the Camera Moves While doing its Sweep Loop")]
+    public float PanningTimePerRotation = 5f;
+
+    [Tooltip("Maximum Angle Camera Can Turn From Its Origin")]
+    public float MaxTrackingAngle = 50f;
+
+    [Tooltip("Rotates to Origin + Element")]
+    public List<Vector3> PanningList;
+
+    [Header("Detection Requirements")]
+    [Tooltip("Maximum Distance the camera can Detect To")]
+    public float MaximumDetectionDistance = 40f;
+    [Tooltip("Minimum Light required on player for the ability to detect them")]
+    public float MinimumLightDetection = 0.015f;
 
     Vector3 startingRotation;
-
-    public List<Vector3> rotationList;
 
     Queue<Vector3> taskQueue;
 
@@ -20,7 +33,9 @@ public class CameraMovement : MonoBehaviour
     CameraViewDetection camView;
 
     Vector3 startingForward;
-   
+
+    
+
 
     IEnumerator co = null;
     // Start is called before the first frame update
@@ -30,7 +45,7 @@ public class CameraMovement : MonoBehaviour
         startingForward = transform.forward;
         taskQueue = new Queue<Vector3>();
         startingRotation = transform.rotation.eulerAngles;
-        foreach(Vector3 v in rotationList)
+        foreach(Vector3 v in PanningList)
         {
             Vector3 temp = new Vector3();
             temp = v + startingRotation;
@@ -43,6 +58,8 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        camView.MaximumDetectionDistance = MaximumDetectionDistance;
+        camView.MinimumLightDetection = MinimumLightDetection;
         CurrentCameraState();
     }
 
@@ -110,7 +127,7 @@ public class CameraMovement : MonoBehaviour
             {
                 if (co == null)
                 {
-                    co = LerpToRotation(Quaternion.Euler(taskQueue.Peek()), 5);
+                    co = LerpToRotation(Quaternion.Euler(taskQueue.Peek()), PanningTimePerRotation);
                     StartCoroutine(co);
                 }
 
