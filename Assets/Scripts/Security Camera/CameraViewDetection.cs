@@ -7,8 +7,10 @@ public class CameraViewDetection : MonoBehaviour
     [HideInInspector]
     public float cameraFOV;
 
-    public float MaximumDetectionDistance = 15f;
-    public float MinimumLightDetection = .5f;
+    [HideInInspector]
+    public float MaximumDetectionDistance;
+    [HideInInspector]
+    public float MinimumLightDetection;
 
     Collider[] players;
     LayerMask playerMask = 1 << 3;
