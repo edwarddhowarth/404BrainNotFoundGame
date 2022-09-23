@@ -14,15 +14,48 @@ public class AIStateController : MonoBehaviour
     public int AIGroup;
     public int fieldOfView = 90;
 
+    public int ViewDistance = 50;
+
+
     [Range(0,1)]
     public float LightDetectionThreshold;
+
+    public float VisualSuspicionTime = 3f;
+    public float VisualIdentifyTime = 3f;
+    public float TimeTillEvaded = 5f;
 
     AIWaypointController aiwc;
     AIMovementController aimc;
 
     Vector3 playerLocation;
-    float playerLightIntensity; // NEED TO FIX CALLBACKS SINCE THE DICT FORMAT IS CHANGED
-    enum AIActionState
+    float playerLightIntensity;
+
+    
+    bool playerInLoS; // AI sees player but not identifed as hostile yet (Unaware to Suspicious)
+    bool PlayerIdentified; // AI has identfied the Player (Suspicious to Unaware)
+    bool suspiciousSoundHeard; // AI has heard suspicious sounds emminating from the player or player actions
+
+    float suspicionTimer;
+    float identifyTimer;
+    float awareTimer;
+
+
+    Collider[] players;
+    LayerMask playerMask = 1 << 3;
+
+    GameObject player;
+    int maxPlayers = 100;
+
+    Transform head;
+
+    public enum AIType
+    {
+        Guard,
+        Soldier,
+        VatSoldier,
+        NPC,
+    }
+    public enum AIActionState
     {
         Guard, // Standing in place
         Patrol, // Walking through waypoints
@@ -31,7 +64,7 @@ public class AIStateController : MonoBehaviour
         Attack // attacking the player (shoot or hit)
     }
 
-    enum AIAlertState
+    public enum AIAlertState
     {
         Unaware, // Doesnt know the player is around at all
         Suspicious, // Doesnt know player is around but has noticed things
@@ -39,10 +72,14 @@ public class AIStateController : MonoBehaviour
         Aware, // Can see player and going to do something (approach or sound alarm)
         InCombat // Engaged in combat with the player
     }
-    
+
     //Stores the current action and alert state
-    AIActionState currentActionState = AIActionState.Guard;
-    AIAlertState currentAlertState = AIAlertState.Unaware;
+    [HideInInspector]
+    public AIActionState currentActionState = AIActionState.Guard;
+    [HideInInspector]
+    public AIAlertState currentAlertState = AIAlertState.Unaware;
+
+    public AIType currentAIType = AIType.Guard;
 
     bool triggered = false;
 
@@ -53,14 +90,36 @@ public class AIStateController : MonoBehaviour
         aimc = GetComponent<AIMovementController>();
 
 
-        EventManager.StartListening(EventManager.EventType.PlayerDetected, PlayerDetectedByOthers);
+        EventManager.StartListening(EventManager.EventType.PlayerDetectedByCamera, PlayerDetectedByCamera);
         EventManager.StartListening(EventManager.EventType.ObjectLightIntensity, PlayerLightIntensity);
 
+
+        if (transform.GetChild(0) != null &&
+            transform.GetChild(0).GetChild(0) != null &&
+            transform.GetChild(0).GetChild(0).GetChild(5) != null &&
+            transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0) != null &&
+            transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0) != null &&
+            transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0) != null &&
+            transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0).GetChild(0) != null)
+        {
+            head = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0).GetChild(0);
+        }
+        else
+        {
+            head = null;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        VisionUpdate(); 
+        HearingUpdate(); 
+        //Check if the player is in vision and if so, go to suspicious state and start a "Vision" timer. If in vision and in a suspicious state increase counter and once it reaches 3 seconds, go to aware. If no vision but suspicious sound, go to suspicious state
+        AlertStateUpdate(); 
+        
+        ActionStateUpdate();
+           
 
         switch(currentAlertState)
         {
@@ -87,6 +146,143 @@ public class AIStateController : MonoBehaviour
         playerLightIntensity = 0f;
     }
 
+    // Check if Player is in line of sight and if the player is illuminated enough.
+    private void VisionUpdate()
+    {
+        RaycastHit hit;
+        foreach(Collider playable in players)
+        {
+            if (playable != null && playable.gameObject && playable.tag == "Player")
+            {
+                player = playable.gameObject;
+            }
+        }
+        if (player != null)
+        {
+            Vector3 playerDirection = (player.transform.position - head.position).normalized; //The direction from the enemy that faces towards the player in a Vector3 form
+                                                                                                   //Debug.DrawRay(transform.position, new Vector3(player.transform.position.x, 0f , player.transform.position.z) * Vector3.Distance(transform.position, new Vector3(0f, player.transform.position.z, player.transform.position.y)), Color.green);
+
+
+            if (Vector3.Angle(player.transform.position - head.position, head.forward) < fieldOfView / 2)
+                if (Physics.Raycast(head.position, playerDirection, out hit, Mathf.Infinity))
+                {
+                    if (hit.collider.tag == "Player" && Vector3.Distance(head.position, hit.collider.transform.position) < ViewDistance)
+                    {
+                        //Debug.DrawRay(head.position, playerDirection * Vector3.Distance(head.position, player.transform.position), Color.green);
+                        if(playerLightIntensity > LightDetectionThreshold)
+                        {
+                            playerInLoS = true;
+                        }
+                        
+                    }
+                }
+            player = null;
+        }
+
+        
+        // AI is unaware of the player
+        if(currentAlertState == AIAlertState.Unaware)
+        {
+            //AI can see player but not has not recognised them
+            if (playerInLoS) 
+            {
+                if (suspicionTimer < VisualSuspicionTime + 1)
+                {
+                    suspicionTimer += Time.deltaTime; // increase suspicion
+                }
+
+            }
+            else
+            {
+                if (suspicionTimer > VisualSuspicionTime)
+                {
+                    suspicionTimer -= Time.deltaTime; // decrease suspicion
+                }
+
+            }
+        }
+
+        // AI is suspicious is and trying to identify the player
+        if(currentAlertState == AIAlertState.Suspicious)
+        {
+            //Confirmed an unknown in vision and is now attempting to identify
+            if (playerInLoS)
+            {
+                if (identifyTimer < VisualIdentifyTime + 1)
+                {
+                    identifyTimer += Time.deltaTime; // increase identification
+                }
+            }
+            else
+            {
+                if (identifyTimer > VisualIdentifyTime)
+                {
+                    identifyTimer -= Time.deltaTime; // decrease identification
+                }
+            }
+        }
+
+        // AI is aware of the player and they are in line of sight
+        // If the AI loses LoS, a timer counts down until the AI considers the player lost
+        if (currentAlertState == AIAlertState.Aware)
+        {
+            if (playerInLoS)
+            {
+                if(awareTimer < TimeTillEvaded+1 )
+                {
+                    awareTimer += Time.deltaTime * 2;
+                }
+                
+            }
+            else
+            {
+                if (awareTimer > (-0.1f))
+                {
+                    awareTimer -= Time.deltaTime;
+                }
+            }
+        }
+
+
+    }
+
+    // Checks if the AI can hear sounds and if they are suspicious sounds, stop and face the sound and if they keep hearing the sound, investigate.
+    private void HearingUpdate()
+    {
+        suspiciousSoundHeard = false;
+    }
+
+    private void AlertStateUpdate()
+    {
+        // unaware AI sees unknown movement/person and becomes suspicious
+        if(currentAlertState == AIAlertState.Unaware)
+        {
+            if(playerInLoS && suspicionTimer > VisualSuspicionTime)
+            {
+                currentAlertState = AIAlertState.Suspicious;
+            }
+        }
+
+        // suspicious AI identifies the unknown as a hostile and becomes aware
+        // Else they look at the player if they are in view to identify
+        if(currentAlertState == AIAlertState.Suspicious)
+        {
+            if (playerInLoS && identifyTimer > VisualIdentifyTime)
+            {
+                currentAlertState = AIAlertState.Aware;
+            }
+            else if (playerInLoS && identifyTimer < VisualIdentifyTime)
+            {
+                aimc.lookAt = true;
+            }
+        }
+       
+    }
+
+    private void ActionStateUpdate()
+    {
+
+    }
 
     //Check if player can be detected
     //check if AI is suspicious
@@ -222,10 +418,21 @@ public class AIStateController : MonoBehaviour
     private void PlayerLightIntensity(Dictionary<string, object> message)
     {
 
-        if (message["playerIntensity"] is float)
+        //Debug.Log("player being checked for detection");
+        if (message["objectName"] is string && message["objectTag"] is string && message["objectIntensity"] is float && message["objectLocation"] is Vector3)
         {
-            playerLightIntensity =  (float)message["playerIntensity"];
+            string name = (string)message["objectName"];
+            string tag = (string)message["objectTag"];
+            float intensity = (float)message["objectIntensity"];
+            Vector3 location = (Vector3)message["objectLocation"];
+            //Debug.Log("intensity: " + (float)message["playerIntensity"] + "\nPlayer Detection Script Angle: " + Vector3.Angle((Vector3)message["playerLocation"] - transform.position, transform.forward));
+            if (tag == "Player")
+            {
+                playerLightIntensity = intensity;
+            }
+
         }
+
     }
 
 
@@ -244,20 +451,37 @@ public class AIStateController : MonoBehaviour
             aiwc.GetNextWaypoint();
     }
 
-    //Callback for Group AI Member detecting Player
-    private void PlayerDetectedByOthers(Dictionary<string, object> message)
+    //Callback for Security Camera detecting Player
+    private void PlayerDetectedByCamera(Dictionary<string, object> message)
     {
         //Debug.Log("player being checked for detection");
-        if (message["location"] is Vector3)
+        if (message["playerLocation"] is Vector3 && message["cameraLocation"] is Vector3)
         {
-            playerLocation = (Vector3)message["location"]; //stores the location of the player locally
+            //NEED TO DECIDE
+            // should we check how far the AI is away from the camera and get the closest
+            // OR
+            // Add a AIManagerScript to check from the position of the Camera which are the closest AI and then message both of them to search - best idea as the camera doesn't know about the AI or Manager, just that its saying its detected the player
+
+            playerLocation = (Vector3)message["playerLocation"]; //stores the location of the player locally
+            //cameraLocation = (Vector3)message["cameraLocation"];
         }
 
     }
 
+    //Callback for Group AI Member detecting Player
 
-    //Callback for Security Camera detecting Player
 
+
+    // Checks for the player within the AI's vision sphere
+    private void FixedUpdate()
+    {
+        int numColliders = Physics.OverlapSphereNonAlloc(transform.position, ViewDistance, players, playerMask);
+
+        if (numColliders > maxPlayers)
+        {
+            Debug.LogError(gameObject.name + " Has too many objects in the scene to illuminate");
+        }
+    }
 
 
 

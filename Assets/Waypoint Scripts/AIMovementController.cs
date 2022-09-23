@@ -13,6 +13,7 @@ public class AIMovementController : MonoBehaviour
     public GameObject enemy; //Need to change for EventManager
 
     private AIWaypointController aiwc;
+    private AIStateController aisc;
 
     public NavMeshAgent agent;
 
@@ -37,6 +38,7 @@ public class AIMovementController : MonoBehaviour
     void Start()
     {
         aiwc = GetComponent<AIWaypointController>();
+        aisc = GetComponent<AIStateController>();
 
         agent = GetComponent<NavMeshAgent>();
 
@@ -52,6 +54,43 @@ public class AIMovementController : MonoBehaviour
         //Debug.Log(WaypointManager.GetWaypointGroupByName("WaypointGroup1").name + " " + WaypointManager.GetWaypointGroupByName("WaypointGroup2").name);
         //Really need to refactor and encapsulate things so they can be reused. currently things have dependencies which wont work.
         //Need to uncouple LookAt from enemy and add a function that will cancel a coroutine if the AI detects something so it can instantly change state.
+        switch(aisc.currentAlertState)
+        {
+            case AIStateController.AIAlertState.Unaware:
+                if(aisc.currentActionState == AIStateController.AIActionState.Guard)
+                {
+                    UnawareGuardMovement();
+                }
+                else
+                {
+                    UnawarePatrolMovement();
+                }
+                break;
+            case AIStateController.AIAlertState.Suspicious:
+                if(aisc.currentActionState == AIStateController.AIActionState.Patrol)
+                {
+                    StopPatrolling();
+                }
+                SuspiciousMovement();
+                break;
+            case AIStateController.AIAlertState.Aware:
+                if(aisc.currentActionState == AIStateController.AIActionState.ActivateButton)
+                {
+                    AwareActivateButtonMovement();
+                }
+                else if (aisc.currentActionState == AIStateController.AIActionState.Search)
+                {
+                    AwareSearchMovement();
+                }
+                break;
+            case AIStateController.AIAlertState.InCombat:
+                IncombatMovement();
+                break;
+            case AIStateController.AIAlertState.PlayerEvaded:
+                PlayerEvadedMovement();
+                break;
+
+        }
 
         if (waiting == false && aiwc.currentWaypoint.position != currentWaypoint)
         {
@@ -59,6 +98,49 @@ public class AIMovementController : MonoBehaviour
         }
 
         Debug.DrawRay(transform.position, (aiwc.currentWaypoint.position - transform.position).normalized * 100);
+
+    }
+
+    // These methods should take in things from the AIStateController and SHOULD NOT be doing any calculating.
+    // It should only be doing movement/actions and any animations required should be passed onto the AIAnimationController
+
+    private void UnawareGuardMovement()
+    {
+
+    }
+
+    private void UnawarePatrolMovement()
+    {
+
+    }
+
+    private void SuspiciousMovement()
+    {
+
+    }
+
+    private void AwareSearchMovement()
+    {
+
+    }
+
+    private void AwareActivateButtonMovement()
+    {
+
+    }
+
+    private void IncombatMovement()
+    {
+
+    }
+
+    private void PlayerEvadedMovement()
+    {
+
+    }
+
+    private void StopPatrolling()
+    {
 
     }
 

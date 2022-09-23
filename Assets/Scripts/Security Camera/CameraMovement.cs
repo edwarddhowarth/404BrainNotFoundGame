@@ -86,8 +86,9 @@ public class CameraMovement : MonoBehaviour
                 if(hit.collider.tag == "Player")
                 {
                     //Debug.Log("Player is at direction: " + lookAtDirection);
-                    EventManager.TriggerEvent(EventManager.EventType.PlayerDetected, 
-                        new Dictionary<string, object> { { "location", lookAt } 
+                    EventManager.TriggerEvent(EventManager.EventType.PlayerDetectedByCamera, 
+                        new Dictionary<string, object> { { "playerLocation", lookAt },
+                            {"cameraLocation", transform.position }
                         });
 
                     Vector3 cameraRotation = transform.position;

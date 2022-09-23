@@ -56,12 +56,23 @@ public class AIAnimationController : MonoBehaviour
         Speed = Animator.StringToHash("Speed");
         LookMoveAngle = Animator.StringToHash("Look Move Angle");
 
-        if(animateLookAt)
+        // check if the neck and spine objects exist on the AI object
+        if (transform.GetChild(0) != null &&
+            transform.GetChild(0).GetChild(0) != null &&
+            transform.GetChild(0).GetChild(0).GetChild(5) != null &&
+            transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0) != null &&
+            transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0) != null &&
+            transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0) != null)
         {
             spine = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0);
             neck = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0);
         }
-        
+        else
+        {
+            spine = null;
+            neck = null;
+        }
+
 
     }
 
@@ -116,62 +127,21 @@ public class AIAnimationController : MonoBehaviour
         animator.SetFloat(Speed, speed);
         animator.SetFloat(LookMoveAngle, angle);
 
-        
-
         previousFramePostion = transform.position;
     }
 
-    /*
-    private void OnAnimatorIK(int layerIndex)
-    {
-        if (animateLookAt && aimc.lookAt)
-        {
-            if (lookAtStart == false)
-            {
-                currentHeadRotation = neck.rotation;
-                lookAtStart = true;
-            }
-
-
-            //aimc.agent.updateRotation = false;
-            //Vector3 offset = (transform.rotation.eulerAngles - lookDir).normalized;
-
-            Vector3 targetDirection = (aimc.enemy.transform.position - transform.position).normalized;
-            Vector3 targetDirectionNeck = (aimc.enemy.transform.position - transform.position).normalized;
-            Vector3 targetDirectionSpine = (aimc.enemy.transform.position - spine.position).normalized;
-            Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.green);
-            Debug.DrawLine(preUpdatePosition, lookDir * 200, Color.cyan);
-            Debug.Log("head angle: " + Vector3.Angle(transform.forward, targetDirection));
-            if (Vector3.Angle(lookDir, targetDirection) < 90)
-            {
-                Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
-                Quaternion newRotation = Quaternion.Lerp(neck.rotation, playerDirection, 10f * Time.deltaTime);
-
-                //animator.SetBoneLocalRotation(HumanBodyBones.Head, playerDirection);
-                neck.rotation = playerDirection;
-                Debug.Log("Look rotation:" + currentHeadRotation);
-                Debug.Log("Look quat:" + playerDirection);
-                Debug.Log("Look quat:" + (Quaternion.Inverse(currentHeadRotation) * newRotation));
-                Debug.DrawRay(animator.GetBoneTransform(HumanBodyBones.Head).position, targetDirectionNeck * 100f, Color.black);
-                currentHeadRotation = newRotation;
-            }
-            
-            //animator.SetBoneLocalRotation(HumanBodyBones.Head, Quaternion.Inverse(currentHeadRotation));
-        }
-        else
-        {
-            lookAtStart = false;
-            //neck.rotation = currentHeadRotation;
-            //animator.SetBoneLocalRotation(HumanBodyBones.Head, Quaternion.Inverse(currentHeadRotation) * Quaternion.LookRotation(transform.forward, Vector3.up));
-        }
-
-    }
-    */
+   
     
 
     private void LateUpdate()
-    { 
-        if (animateLookAt && aimc.lookAt)
+    {
+        AnimateLookAt();
+
+    }
+
+    private void AnimateLookAt()
+    {
+        if (spine && neck && aimc.lookAt)
         {
             if (lookAtStart == false || returningToCenterHead == true) //if we are beginning to look at the object
             {
@@ -181,7 +151,7 @@ public class AIAnimationController : MonoBehaviour
                 returningToCenterHead = false;
                 lookTime = 0;
             }
-            
+
 
             //aimc.agent.updateRotation = false;
             //Vector3 offset = (transform.rotation.eulerAngles - lookDir).normalized;
@@ -232,18 +202,18 @@ public class AIAnimationController : MonoBehaviour
             }
             else
             {
-                
+
                 Quaternion centerRotation = Quaternion.Lerp(currentHeadRotation, Quaternion.LookRotation(lookDir, Vector3.up), 6f * Time.deltaTime);
                 /*
                 neck.rotation = centerRotation;
                 */
                 currentHeadRotation = centerRotation;
-              
+
 
                 centerRotation = Quaternion.Lerp(currentSpineRotation, Quaternion.LookRotation(lookDir, Vector3.up), 6f * Time.deltaTime);
                 spine.rotation = centerRotation;
                 currentSpineRotation = centerRotation;
-                  
+
                 //neck.rotation = currentHeadRotation;
                 //spine.rotation = currentSpineRotation;
             }
@@ -281,9 +251,9 @@ public class AIAnimationController : MonoBehaviour
 
             */
         }
-        else if(animate)
+        else if (animate)
         {
-            
+
             if (lookAtStart == true && lookTime < 2f)
             {
                 lookTime += Time.deltaTime;
@@ -300,7 +270,7 @@ public class AIAnimationController : MonoBehaviour
 
                 Debug.Log("Turning back to forward");
                 returningToCenterHead = true;
-                
+
             }
             else
             {
@@ -309,11 +279,63 @@ public class AIAnimationController : MonoBehaviour
                 returningToCenterHead = false;
             }
 
-            
 
-            
+
+
         }
-
     }
+
+
+
+
+
+
+
+    /*
+   private void OnAnimatorIK(int layerIndex)
+   {
+       if (animateLookAt && aimc.lookAt)
+       {
+           if (lookAtStart == false)
+           {
+               currentHeadRotation = neck.rotation;
+               lookAtStart = true;
+           }
+
+
+           //aimc.agent.updateRotation = false;
+           //Vector3 offset = (transform.rotation.eulerAngles - lookDir).normalized;
+
+           Vector3 targetDirection = (aimc.enemy.transform.position - transform.position).normalized;
+           Vector3 targetDirectionNeck = (aimc.enemy.transform.position - transform.position).normalized;
+           Vector3 targetDirectionSpine = (aimc.enemy.transform.position - spine.position).normalized;
+           Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.green);
+           Debug.DrawLine(preUpdatePosition, lookDir * 200, Color.cyan);
+           Debug.Log("head angle: " + Vector3.Angle(transform.forward, targetDirection));
+           if (Vector3.Angle(lookDir, targetDirection) < 90)
+           {
+               Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
+               Quaternion newRotation = Quaternion.Lerp(neck.rotation, playerDirection, 10f * Time.deltaTime);
+
+               //animator.SetBoneLocalRotation(HumanBodyBones.Head, playerDirection);
+               neck.rotation = playerDirection;
+               Debug.Log("Look rotation:" + currentHeadRotation);
+               Debug.Log("Look quat:" + playerDirection);
+               Debug.Log("Look quat:" + (Quaternion.Inverse(currentHeadRotation) * newRotation));
+               Debug.DrawRay(animator.GetBoneTransform(HumanBodyBones.Head).position, targetDirectionNeck * 100f, Color.black);
+               currentHeadRotation = newRotation;
+           }
+
+           //animator.SetBoneLocalRotation(HumanBodyBones.Head, Quaternion.Inverse(currentHeadRotation));
+       }
+       else
+       {
+           lookAtStart = false;
+           //neck.rotation = currentHeadRotation;
+           //animator.SetBoneLocalRotation(HumanBodyBones.Head, Quaternion.Inverse(currentHeadRotation) * Quaternion.LookRotation(transform.forward, Vector3.up));
+       }
+
+   }
+   */
 
 }
