@@ -57,21 +57,29 @@ public class AIAnimationController : MonoBehaviour
         LookMoveAngle = Animator.StringToHash("Look Move Angle");
 
         // check if the neck and spine objects exist on the AI object
-        if (transform.GetChild(0) != null &&
+        spine = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0);
+        neck = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0);
+
+        /*
+        if (transform.childCount > 1)
+        {
+            if (transform != null &&
+            transform.GetChild(0) != null &&
             transform.GetChild(0).GetChild(0) != null &&
             transform.GetChild(0).GetChild(0).GetChild(5) != null &&
             transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0) != null &&
             transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0) != null &&
             transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0) != null)
-        {
-            spine = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0);
-            neck = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(0).GetChild(0);
+            {
+                
+            }
         }
         else
         {
             spine = null;
             neck = null;
         }
+        */
 
 
     }
