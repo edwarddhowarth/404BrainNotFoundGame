@@ -31,7 +31,8 @@ public class AIStateController : MonoBehaviour
     Vector3 playerLocation;
     float playerLightIntensity;
 
-    
+   
+
     bool playerInLoS; // AI sees player but not identifed as hostile yet (Unaware to Suspicious)
     bool PlayerIdentified; // AI has identfied the Player (Suspicious to Unaware)
     bool suspiciousSoundHeard; // AI has heard suspicious sounds emminating from the player or player actions
@@ -42,6 +43,8 @@ public class AIStateController : MonoBehaviour
     float awareTimer;
     float reacquireTimer;
 
+
+    Vector3 suspiciousLocation;
 
     Collider[] players;
     LayerMask playerMask = 1 << 3;
@@ -58,6 +61,14 @@ public class AIStateController : MonoBehaviour
         VatSoldier,
         NPC,
     }
+
+    public enum AIRole
+    {
+        Guarding,
+        Patrolling,
+        Idle
+    }
+
     public enum AIActionState
     {
         Guard, // Standing in place
@@ -81,6 +92,8 @@ public class AIStateController : MonoBehaviour
     public AIActionState currentActionState = AIActionState.Guard;
     [HideInInspector]
     public AIAlertState currentAlertState = AIAlertState.Unaware;
+
+    public AIRole currentAIRole = AIRole.Patrolling;
 
     public AIType currentAIType = AIType.Guard;
 
@@ -142,14 +155,11 @@ public class AIStateController : MonoBehaviour
         VisionUpdate(); // Can see Player?
         HearingUpdate(); // Can hear player or their actions??
         //Check if the player is in vision and if so, go to suspicious state and start a "Vision" timer. If in vision and in a suspicious state increase counter and once it reaches 3 seconds, go to aware. If no vision but suspicious sound, go to suspicious state
+        ActionStateTimers();
         AlertStateUpdate(); // With new info, update their state
         
         ActionStateUpdate(); // With new alert state, update their action
            
-
-        
-
-
 
         playerLightIntensity = 0f;
     }
@@ -160,24 +170,23 @@ public class AIStateController : MonoBehaviour
         if (head)
         {
 
-
             playerInLoS = false;
             player = null;
             RaycastHit hit;
-        foreach(Collider playable in players)
-        {
-            if (playable != null && playable.gameObject && playable.tag == "Player")
+            foreach (Collider playable in players)
             {
-                player = playable.gameObject;
-                Debug.Log("player found");
+                if (playable != null && playable.gameObject && playable.tag == "Player")
+                {
+                    player = playable.gameObject;
+                    Debug.Log("player found");
+                }
             }
-        }
-        if (player != null)
-        {
-            Vector3 playerDirection = (player.transform.position - head.position).normalized; //The direction from the enemy that faces towards the player in a Vector3 form
-                                                                                              //Debug.DrawRay(transform.position, new Vector3(player.transform.position.x, 0f , player.transform.position.z) * Vector3.Distance(transform.position, new Vector3(0f, player.transform.position.z, player.transform.position.y)), Color.green);
+            if (player != null)
+            {
+                Vector3 playerDirection = (player.transform.position - head.position).normalized; //The direction from the enemy that faces towards the player in a Vector3 form
+                                                                                                  //Debug.DrawRay(transform.position, new Vector3(player.transform.position.x, 0f , player.transform.position.z) * Vector3.Distance(transform.position, new Vector3(0f, player.transform.position.z, player.transform.position.y)), Color.green);
 
-                
+
                 if (Vector3.Angle(player.transform.position - head.position, head.forward) < fieldOfView / 2)
                 {
                     if (Physics.Raycast(head.position, playerDirection, out hit, Mathf.Infinity))
@@ -193,16 +202,51 @@ public class AIStateController : MonoBehaviour
                         }
                     }
                 }
-                
-            
+
+
+            }
+
         }
 
-        
-        // AI is unaware of the player
-        if(currentAlertState == AIAlertState.Unaware)
+    }
+
+    // Checks if the AI can hear sounds and if they are suspicious sounds, stop and face the sound and if they keep hearing the sound, investigate.
+    private void HearingUpdate()
+    {
+        suspiciousSoundHeard = false;
+    }
+
+   
+
+    private void ActionStateTimers()
+    {
+        switch(currentAlertState)
+        {
+            case AIAlertState.Unaware:
+                UnawareStateTimer();
+            break;
+            case AIAlertState.Suspicious:
+                SuspiciousStateTimer();
+            break;
+            case AIAlertState.PlayerEvaded:
+                PlayerEvadedStateTimer();
+            break;
+            case AIAlertState.Aware:
+                AwareStateTimer();
+            break;
+            case AIAlertState.InCombat:
+                InCombatStateTimer();
+            break;
+
+        }
+    }
+
+    private void UnawareStateTimer()
+    {
+        if (currentAlertState == AIAlertState.Unaware)
         {
             //AI can see player but not has not recognised them
-            if (playerInLoS) 
+            if (playerInLoS)
             {
                 if (suspicionTimer < VisualSuspicionTime + 1)
                 {
@@ -219,9 +263,12 @@ public class AIStateController : MonoBehaviour
 
             }
         }
+    }
 
+    private void SuspiciousStateTimer()
+    {
         // AI is suspicious is and trying to identify the player
-        if(currentAlertState == AIAlertState.Suspicious)
+        if (currentAlertState == AIAlertState.Suspicious)
         {
             //Confirmed an unknown in vision and is now attempting to identify
             if (playerInLoS)
@@ -241,18 +288,43 @@ public class AIStateController : MonoBehaviour
                 }
             }
         }
+    }
 
+    private void PlayerEvadedStateTimer()
+    {
+        if (currentAlertState == AIAlertState.PlayerEvaded)
+        {
+            if (playerInLoS)
+            {
+                if (reacquireTimer < EvadedReacquireTime + 1)
+                {
+                    reacquireTimer += Time.fixedDeltaTime;
+                }
+            }
+            else
+            {
+                if (reacquireTimer > (-0.1f))
+                {
+                    reacquireTimer -= Time.fixedDeltaTime;
+
+                }
+            }
+        }
+    }
+
+    private void AwareStateTimer()
+    {
         // AI is aware of the player and they are in line of sight
         // If the AI loses LoS, a timer counts down until the AI considers the player lost
         if (currentAlertState == AIAlertState.Aware)
         {
             if (playerInLoS)
             {
-                if(awareTimer < TimeTillEvaded+1 )
+                if (awareTimer < TimeTillEvaded + 1)
                 {
                     awareTimer += Time.fixedDeltaTime * 2;
                 }
-                
+
             }
             else
             {
@@ -262,102 +334,15 @@ public class AIStateController : MonoBehaviour
                 }
             }
         }
-
-        if(currentAlertState == AIAlertState.PlayerEvaded)
-        {
-            if(playerInLoS)
-            {
-                if(reacquireTimer < EvadedReacquireTime+1)
-                {
-                    reacquireTimer += Time.fixedDeltaTime;
-                }
-            }
-            else
-            {
-                if(reacquireTimer > (-0.1f))
-                {
-                    reacquireTimer -= Time.fixedDeltaTime;
-
-                }
-            }
-        }
-        }
-
     }
 
-    // Checks if the AI can hear sounds and if they are suspicious sounds, stop and face the sound and if they keep hearing the sound, investigate.
-    private void HearingUpdate()
+    private void InCombatStateTimer()
     {
-        suspiciousSoundHeard = false;
+
     }
+
 
     private void AlertStateUpdate()
-    {
-        // unaware AI sees unknown movement/person and becomes suspicious
-        if(currentAlertState == AIAlertState.Unaware)
-        {
-            if(playerInLoS && suspicionTimer > VisualSuspicionTime)
-            {
-                currentAlertState = AIAlertState.Suspicious;
-                suspicionTimer = 0f;
-            }
-        }
-
-        // suspicious AI identifies the unknown as a hostile and becomes aware
-        // Else they look at the player if they are in view to identify
-        if(currentAlertState == AIAlertState.Suspicious)
-        {
-            if (playerInLoS && identifyTimer > VisualIdentifyTime)
-            {
-                currentAlertState = AIAlertState.Aware;
-                identifyTimer = 0f;
-                awareTimer = TimeTillEvaded;
-                aimc.lookAt = true;
-            }
-            else if (playerInLoS && identifyTimer < VisualIdentifyTime)
-            {
-                aimc.lookAt = true;
-            }
-            else if(ignoreTimer > VisualSuspicionTime)
-            {
-                currentAlertState = AIAlertState.Unaware;
-                suspicionTimer = VisualSuspicionTime * 0.5f;
-                identifyTimer = 0f;
-                aimc.lookAt = false;
-            }
-        }
-
-        //AI was aware but has lost track of the player
-        if(currentAlertState == AIAlertState.Aware)
-        {
-
-            if(awareTimer <= 0)
-            {
-                currentAlertState = AIAlertState.PlayerEvaded;
-            }
-        }
-
-
-
-        if(currentAlertState == AIAlertState.InCombat)
-        {
-
-        }
-
-        // Player evaded the AI but AI has reacquired visuals
-        if(currentAlertState == AIAlertState.PlayerEvaded)
-        {
-            if(playerInLoS && reacquireTimer > EvadedReacquireTime)
-            {
-                currentAlertState = AIAlertState.Aware;
-            }
-        }
-
-
-    }
-
-
-    private void ActionStateUpdate()
     {
 
         switch (currentAlertState)
@@ -390,9 +375,20 @@ public class AIStateController : MonoBehaviour
         //currentAlertState = CheckIfPlayerDetected(); // Update alert state aware if player is detected on this frame
         //currentAlertState = CheckForSuspiciousActions(); // update alert state to suspicious if AI is suspicious on this frame
 
+        // unaware AI sees unknown movement/person and becomes suspicious
+        if (currentAlertState == AIAlertState.Unaware)
+        {
+            if (playerInLoS && suspicionTimer > VisualSuspicionTime)
+            {
+                currentAlertState = AIAlertState.Suspicious;
+                suspicionTimer = 0f;
+            }
+        }
         // if the alert state didn't change, continue with action (guard, patrol)
 
         //else we end the method and go to the update method for the new alert state
+
+        // AI is unaware of the player
 
 
     }
@@ -402,25 +398,69 @@ public class AIStateController : MonoBehaviour
     //Continue ActionState Guard, Patrol or Search
     public void SuspiciousStateUpdate()
     {
-        currentAlertState = CheckIfPlayerDetected();
+
+        // suspicious AI identifies the unknown as a hostile and becomes aware
+        // Else they look at the player if they are in view to identify
+        if (currentAlertState == AIAlertState.Suspicious)
+        {
+            if (playerInLoS && identifyTimer > VisualIdentifyTime)
+            {
+                currentAlertState = AIAlertState.Aware;
+                identifyTimer = 0f;
+                awareTimer = TimeTillEvaded;
+                aimc.lookAt = true;
+            }
+            else if (playerInLoS && identifyTimer < VisualIdentifyTime)
+            {
+                aimc.lookAt = true;
+            }
+            else if (ignoreTimer > VisualSuspicionTime)
+            {
+                currentAlertState = AIAlertState.Unaware;
+                suspicionTimer = VisualSuspicionTime * 0.5f;
+                identifyTimer = 0f;
+                aimc.lookAt = false;
+            }
+        }
 
         // if the alert state didn't change, continue with action (guard, search)
 
         //else we end the method and go to the update method for the new alert state
     }
 
-    //Check if player can be detected
-    //Continue ActionState Guard, Patrol or Search
-    public void PlayerEvadedStateUpdate()
-    {
-        currentAlertState = CheckIfPlayerDetected();
-    }
+    
 
     //Continue ActionState Attack or Active Button
     //Has methods for either approaching the player to attack or doing another action
     public void AwareStateUpdate()
     {
 
+
+        //AI was aware but has lost track of the player
+        if (currentAlertState == AIAlertState.Aware)
+        {
+
+            if (awareTimer <= 0)
+            {
+                currentAlertState = AIAlertState.PlayerEvaded;
+            }
+        }
+
+    }
+
+    //Check if player can be detected
+    //Continue ActionState Guard, Patrol or Search
+    public void PlayerEvadedStateUpdate()
+    {
+
+        // Player evaded the AI but AI has reacquired visuals
+        if (currentAlertState == AIAlertState.PlayerEvaded)
+        {
+            if (playerInLoS && reacquireTimer > EvadedReacquireTime)
+            {
+                currentAlertState = AIAlertState.Aware;
+            }
+        }
     }
 
     //Continue ActionState Attack
@@ -428,9 +468,126 @@ public class AIStateController : MonoBehaviour
     public void InCombatStateUpdate()
     {
 
+
+        if (currentAlertState == AIAlertState.InCombat)
+        {
+
+        }
+
+    }
+
+
+
+
+    private void ActionStateUpdate()
+    {
+
+        switch (currentAlertState)
+        {
+            case AIAlertState.Unaware:
+                UnawareStateAction();
+                break;
+            case AIAlertState.Suspicious:
+                SuspiciousStateAction();
+                break;
+            case AIAlertState.PlayerEvaded:
+                PlayerEvadedStateAction();
+                break;
+            case AIAlertState.Aware:
+                AwareStateAction();
+                break;
+            case AIAlertState.InCombat:
+                InCombatStateAction();
+                break;
+
+        }
+
+    }
+
+    private void UnawareStateAction()
+    {
+        switch(currentAIRole)
+        {
+            case AIRole.Guarding:
+                aimc.UnawareGuardMovement();
+                break;
+            case AIRole.Patrolling:
+                aimc.UnawarePatrolMovement();
+                break;
+            case AIRole.Idle:
+                aimc.IdleMovement();
+                break;
+            
+        }
+    }
+
+    private void SuspiciousStateAction()
+    {
+        if(player != null)
+        {
+            suspiciousLocation = player.transform.position;
+        }
+        
+
+        switch (currentAIRole)
+        {
+            case AIRole.Guarding:
+                aimc.SuspiciousMovement(suspiciousLocation);
+                break;
+            case AIRole.Patrolling:
+                aimc.SuspiciousMovement(suspiciousLocation);
+                break;
+            case AIRole.Idle:
+                aimc.IdleMovement();
+                break;
+
+        }
+    }
+
+   
+
+    private void AwareStateAction()
+    {
+        switch (currentAIRole)
+        {
+            case AIRole.Guarding:
+                aimc.AwareSearchMovement();
+                break;
+            case AIRole.Patrolling:
+                aimc.AwareSearchMovement();
+                break;
+            case AIRole.Idle:
+                aimc.AwareIdleEvade();
+                break;
+
+        }
+    }
+
+    private void PlayerEvadedStateAction()
+    {
+        switch (currentAIRole)
+        {
+            case AIRole.Guarding:
+                aimc.PlayerEvadedGuardMovement();
+                break;
+            case AIRole.Patrolling:
+                aimc.PlayerEvadedSearchMovement();
+                break;
+            case AIRole.Idle:
+                aimc.PlayerEvadedIdleMovement();
+                break;
+
+        }
+    }
+
+    private void InCombatStateAction()
+    {
+
     }
 
     //Check if the AI is suspicious of the player (sound or disturbance)
+
+    /*
 
     private AIAlertState SuspiciousOfPlayer()
     {
@@ -511,6 +668,8 @@ public class AIStateController : MonoBehaviour
 
         return false;
     }
+     */
+
 
     //Callback for the player's light intensity
     private void PlayerLightIntensity(Dictionary<string, object> message)
@@ -532,7 +691,7 @@ public class AIStateController : MonoBehaviour
         }
 
     }
-
+   
 
     /// <summary>
     /// Changes the waypoint group for this AI

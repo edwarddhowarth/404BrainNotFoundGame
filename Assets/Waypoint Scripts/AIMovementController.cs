@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class AIMovementController : MonoBehaviour
 {
+    IEnumerator co;
+
     public bool lookAt; //Look at object rather than look forward
 
     public GameObject enemy; //Need to change for EventManager
@@ -31,12 +33,14 @@ public class AIMovementController : MonoBehaviour
     bool waiting = false;
 
     private Vector3 currentWaypoint;
+    private Transform guardLocation;
 
 
     float nextWaitTime;
     // Start is called before the first frame update
     void Start()
     {
+        co = WaitAtWaypointCoroutine();
         aiwc = GetComponent<AIWaypointController>();
         aisc = GetComponent<AIStateController>();
 
@@ -54,6 +58,8 @@ public class AIMovementController : MonoBehaviour
         //Debug.Log(WaypointManager.GetWaypointGroupByName("WaypointGroup1").name + " " + WaypointManager.GetWaypointGroupByName("WaypointGroup2").name);
         //Really need to refactor and encapsulate things so they can be reused. currently things have dependencies which wont work.
         //Need to uncouple LookAt from enemy and add a function that will cancel a coroutine if the AI detects something so it can instantly change state.
+
+        /*
         switch(aisc.currentAlertState)
         {
             case AIStateController.AIAlertState.Unaware:
@@ -91,11 +97,9 @@ public class AIMovementController : MonoBehaviour
                 break;
 
         }
+        */
 
-        if (waiting == false && aiwc.currentWaypoint.position != currentWaypoint)
-        {
-            StartCoroutine(WaitAtWaypointCoroutine());
-        }
+        
 
         Debug.DrawRay(transform.position, (aiwc.currentWaypoint.position - transform.position).normalized * 100);
 
@@ -104,45 +108,115 @@ public class AIMovementController : MonoBehaviour
     // These methods should take in things from the AIStateController and SHOULD NOT be doing any calculating.
     // It should only be doing movement/actions and any animations required should be passed onto the AIAnimationController
 
-    private void UnawareGuardMovement()
+    public void IdleMovement()
     {
 
     }
 
-    private void UnawarePatrolMovement()
+    public void UnawareGuardMovement()
+    {
+        GuardPosition();
+    }
+
+    public void UnawarePatrolMovement()
+    {
+        FollowWaypoint();
+    }
+
+
+    public void SuspiciousMovement(Vector3 location)
+    {
+        InvestigateSuspicion(location);
+    }
+
+    public void AwareIdleEvade()
     {
 
     }
 
-    private void SuspiciousMovement()
+    public void AwareSearchMovement()
     {
 
     }
 
-    private void AwareSearchMovement()
+    public void AwareActivateButtonMovement()
     {
 
     }
 
-    private void AwareActivateButtonMovement()
+    public void IncombatMovement()
     {
 
     }
 
-    private void IncombatMovement()
+    public void PlayerEvadedGuardMovement()
     {
 
     }
 
-    private void PlayerEvadedMovement()
+    public void PlayerEvadedSearchMovement()
     {
 
     }
 
-    private void StopPatrolling()
+    public void PlayerEvadedIdleMovement()
     {
 
     }
+
+    public void StopPatrolling()
+    {
+
+    }
+
+    public void GuardPosition()
+    {
+        if(co != null)
+        {
+            waiting = false;
+            StopCoroutine(co);
+            co = null;
+        }
+        
+        guardLocation = aiwc.GetPosition(0); //Get the first node in the waypoint
+        
+        if (Vector3.Distance(transform.position, guardLocation.position) < 1f)
+        {
+            transform.rotation = guardLocation.rotation;
+        }
+        else
+        {
+            agent.destination = guardLocation.position;
+        }
+        
+
+    }
+
+    public void FollowWaypoint()
+    {
+        if(co == null)
+        {
+            co = WaitAtWaypointCoroutine();
+            aiwc.GetNextWaypoint();
+        }
+        if (waiting == false && aiwc.currentWaypoint.position != currentWaypoint)
+        {
+            StartCoroutine(co);
+        }
+
+    }
+
+    public void InvestigateSuspicion(Vector3 location)
+    {
+        if(co != null)
+        {
+            waiting = false;
+            StopCoroutine(co);
+            co = null;
+        }
+        agent.destination = location;
+    }
+
 
     IEnumerator WaitAtWaypointCoroutine()
     {

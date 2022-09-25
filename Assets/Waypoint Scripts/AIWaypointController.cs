@@ -11,7 +11,9 @@ public class AIWaypointController : MonoBehaviour
 {
     //Stores reference to waypoint
     [SerializeField]
-    private Waypoints waypoints;
+    public List<Waypoints> waypoints;
+
+    private Waypoints workingWaypoint;
 
     Collider collider;
 
@@ -21,9 +23,20 @@ public class AIWaypointController : MonoBehaviour
         get { return _currentWaypoint; }
     }
 
+    private Waypoints workingPosition;
+
+    private Transform _singlePosition;
+    public Transform singlePosition
+    {
+        get { return _singlePosition; }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        workingPosition = waypoints[0];
+
+        workingWaypoint = waypoints[0];
         collider = GetComponent<Collider>();
         GetClosestWaypoint();
     }
@@ -57,15 +70,20 @@ public class AIWaypointController : MonoBehaviour
         }
     }
 
+    public Transform GetPosition(int pos)
+    {
+        return workingPosition.transform.GetChild(pos).transform;
+    }
+
 
     public void GetNextWaypoint()
     {
-        _currentWaypoint = waypoints.GetNextWaypoint(_currentWaypoint);
+        _currentWaypoint = workingWaypoint.GetNextWaypoint(_currentWaypoint);
     }
 
     public void GetClosestWaypoint()
     {
-        _currentWaypoint = waypoints.GetClosestWaypoint(transform);
+        _currentWaypoint = workingWaypoint.GetClosestWaypoint(transform);
 
     }
 
@@ -74,7 +92,7 @@ public class AIWaypointController : MonoBehaviour
         GameObject wp = WaypointManager.GetWaypointGroupByName(name);
         if(wp != null )
         {
-            waypoints = wp.GetComponent<Waypoints>();
+            workingWaypoint = wp.GetComponent<Waypoints>();
         }
         
     }
