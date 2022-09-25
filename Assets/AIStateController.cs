@@ -16,6 +16,9 @@ public class AIStateController : MonoBehaviour
 
     public int ViewDistance = 50;
 
+    public float ShootingRange = 10f;
+    public float MeleeRange = 2f;
+
 
     [Range(0,1)]
     public float LightDetectionThreshold;
@@ -44,6 +47,11 @@ public class AIStateController : MonoBehaviour
     float reacquireTimer;
 
 
+    private float gunTimer;
+    private float meleeTimer;
+    bool attack;
+
+
     Vector3 suspiciousLocation;
 
     Collider[] players;
@@ -62,20 +70,17 @@ public class AIStateController : MonoBehaviour
         NPC,
     }
 
+    public enum AIWeapon
+    {
+        Gun,
+        Melee
+    }
+
     public enum AIRole
     {
         Guarding,
         Patrolling,
         Idle
-    }
-
-    public enum AIActionState
-    {
-        Guard, // Standing in place
-        Patrol, // Walking through waypoints
-        Search, // Looking for the player based on a given position
-        ActivateButton, // Activating a button that does something (alarm, sentry)
-        Attack // attacking the player (shoot or hit)
     }
 
     public enum AIAlertState
@@ -89,13 +94,16 @@ public class AIStateController : MonoBehaviour
 
     //Stores the current action and alert state
     [HideInInspector]
-    public AIActionState currentActionState = AIActionState.Guard;
-    [HideInInspector]
     public AIAlertState currentAlertState = AIAlertState.Unaware;
 
     public AIRole currentAIRole = AIRole.Patrolling;
 
     public AIType currentAIType = AIType.Guard;
+
+    public AIWeapon currentWeapon = AIWeapon.Gun;
+
+    public float GunFireRate = 1f;
+    public float MeleeRate = 1f;
 
     bool triggered = false;
 
@@ -216,7 +224,11 @@ public class AIStateController : MonoBehaviour
         suspiciousSoundHeard = false;
     }
 
-   
+
+
+    /*
+    * State Timers
+    */
 
     private void ActionStateTimers()
     {
@@ -341,6 +353,10 @@ public class AIStateController : MonoBehaviour
 
     }
 
+    /*
+     * Alert States
+     */
+
 
     private void AlertStateUpdate()
     {
@@ -439,10 +455,34 @@ public class AIStateController : MonoBehaviour
         //AI was aware but has lost track of the player
         if (currentAlertState == AIAlertState.Aware)
         {
-
+            if(playerInLoS)
+            {
+                aimc.lookAt = true;
+            }
+            else
+            {
+                aimc.lookAt = false;
+            }
+            
             if (awareTimer <= 0)
             {
                 currentAlertState = AIAlertState.PlayerEvaded;
+            }
+
+            switch(currentWeapon)
+            {
+                case AIWeapon.Gun:
+                    if(Vector3.Distance(transform.position, aimc.enemy.transform.position) < ShootingRange && playerInLoS)
+                    {
+                        currentAlertState = AIAlertState.InCombat;
+                    }
+                    break;
+                case AIWeapon.Melee:
+                    if (Vector3.Distance(transform.position, aimc.enemy.transform.position) < MeleeRange && playerInLoS)
+                    {
+                        currentAlertState = AIAlertState.InCombat;
+                    }
+                    break;
             }
         }
 
@@ -477,6 +517,10 @@ public class AIStateController : MonoBehaviour
     }
 
 
+
+    /*
+     * Action States
+     */
 
 
     private void ActionStateUpdate()
@@ -527,6 +571,10 @@ public class AIStateController : MonoBehaviour
         {
             suspiciousLocation = player.transform.position;
         }
+        else
+        {
+            suspiciousLocation = transform.position;
+        }
         
 
         switch (currentAIRole)
@@ -548,13 +596,23 @@ public class AIStateController : MonoBehaviour
 
     private void AwareStateAction()
     {
+        if (player != null)
+        {
+            suspiciousLocation = player.transform.position;
+        }
+        else
+        {
+            suspiciousLocation = transform.position;
+        }
+
+        attack = false;
         switch (currentAIRole)
         {
             case AIRole.Guarding:
-                aimc.AwareSearchMovement();
+                aimc.AwareSearchMovement(suspiciousLocation);
                 break;
             case AIRole.Patrolling:
-                aimc.AwareSearchMovement();
+                aimc.AwareSearchMovement(suspiciousLocation);
                 break;
             case AIRole.Idle:
                 aimc.AwareIdleEvade();
@@ -565,6 +623,7 @@ public class AIStateController : MonoBehaviour
 
     private void PlayerEvadedStateAction()
     {
+        attack = false;
         switch (currentAIRole)
         {
             case AIRole.Guarding:
@@ -582,7 +641,36 @@ public class AIStateController : MonoBehaviour
 
     private void InCombatStateAction()
     {
+        switch (currentWeapon)
+        {
+            case AIWeapon.Gun:
+                if (gunTimer < GunFireRate) // Limits the fire rate and makes the AI attempt 1 attack
+                {
+                    aimc.GunCombat();
+                    attack = true;
+                    gunTimer += Time.fixedDeltaTime;
+                }
+                else // Once they have attacked, go back to aware state to chase and reset attack
+                {
+                    currentAlertState = AIAlertState.Aware;
+                    gunTimer = 0f;
+                }
+                break;
+            case AIWeapon.Melee:
+                if(meleeTimer < MeleeRate)
+                {
+                    aimc.MeleeCombat();
+                    attack = true;
+                    meleeTimer += Time.fixedDeltaTime;
+                }
+                else
+                {
+                    currentAlertState = AIAlertState.Aware;
+                    meleeTimer = 0f;
+                }
+                break;
 
+        }
     }
 
     //Check if the AI is suspicious of the player (sound or disturbance)

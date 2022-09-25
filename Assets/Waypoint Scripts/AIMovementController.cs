@@ -9,24 +9,26 @@ using UnityEngine;
 public class AIMovementController : MonoBehaviour
 {
     IEnumerator co;
+    IEnumerator coIn;
 
     public bool lookAt; //Look at object rather than look forward
 
     public GameObject enemy; //Need to change for EventManager
+    public Transform lastKnownEnemyPosition;
 
     private AIWaypointController aiwc;
     private AIStateController aisc;
 
     public NavMeshAgent agent;
 
-    public float patrolMaxSpeed;
-    public float patrolAcceleration;
+    public float patrolMaxSpeed = 2.5f;
+    public float patrolAcceleration = 3f;
 
-    public float searchMaxSpeed;
-    public float searchAcceleration;
+    public float searchMaxSpeed = 3f;
+    public float searchAcceleration = 3.5f;
 
-    public float combatMaxSpeed;
-    public float combatAcceleration;
+    public float combatMaxSpeed = 3.5f;
+    public float combatAcceleration = 4f;
 
     public float maxTurnSpeed;
 
@@ -37,10 +39,16 @@ public class AIMovementController : MonoBehaviour
 
 
     float nextWaitTime;
+
+
+
+    
+
     // Start is called before the first frame update
     void Start()
     {
         co = WaitAtWaypointCoroutine();
+        
         aiwc = GetComponent<AIWaypointController>();
         aisc = GetComponent<AIStateController>();
 
@@ -55,6 +63,31 @@ public class AIMovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        switch(aisc.currentAlertState)
+        {
+            case AIStateController.AIAlertState.Unaware:
+                agent.speed = patrolMaxSpeed;
+                agent.acceleration = patrolAcceleration;
+                break;
+            case AIStateController.AIAlertState.Suspicious:
+                agent.speed = searchMaxSpeed;
+                agent.acceleration = searchAcceleration;
+                break;
+            case AIStateController.AIAlertState.PlayerEvaded:
+                agent.speed = searchMaxSpeed;
+                agent.acceleration = searchAcceleration;
+                break;
+            case AIStateController.AIAlertState.Aware:
+                agent.speed = combatMaxSpeed;
+                agent.acceleration = combatAcceleration;
+                break;
+            case AIStateController.AIAlertState.InCombat:
+                agent.speed = combatMaxSpeed;
+                agent.acceleration = combatAcceleration;
+                break;
+
+        }
         //Debug.Log(WaypointManager.GetWaypointGroupByName("WaypointGroup1").name + " " + WaypointManager.GetWaypointGroupByName("WaypointGroup2").name);
         //Really need to refactor and encapsulate things so they can be reused. currently things have dependencies which wont work.
         //Need to uncouple LookAt from enemy and add a function that will cancel a coroutine if the AI detects something so it can instantly change state.
@@ -99,7 +132,8 @@ public class AIMovementController : MonoBehaviour
         }
         */
 
-        
+        float angleToNextWaypoint = calculateWaypointAngles(aiwc.currentWaypoint.position);
+        //coIn = StartCoroutine(RotateTowardsWaypoint(angleToNextWaypoint));
 
         Debug.DrawRay(transform.position, (aiwc.currentWaypoint.position - transform.position).normalized * 100);
 
@@ -134,9 +168,9 @@ public class AIMovementController : MonoBehaviour
 
     }
 
-    public void AwareSearchMovement()
+    public void AwareSearchMovement(Vector3 location)
     {
-
+        InvestigateSuspicion(location);
     }
 
     public void AwareActivateButtonMovement()
@@ -151,12 +185,12 @@ public class AIMovementController : MonoBehaviour
 
     public void PlayerEvadedGuardMovement()
     {
-
+        GuardPosition();
     }
 
     public void PlayerEvadedSearchMovement()
     {
-
+        FollowWaypoint();
     }
 
     public void PlayerEvadedIdleMovement()
@@ -174,7 +208,8 @@ public class AIMovementController : MonoBehaviour
         if(co != null)
         {
             waiting = false;
-            StopCoroutine(co);
+            StopAllCoroutines();
+            //StopCoroutine(co);
             co = null;
         }
         
@@ -192,26 +227,41 @@ public class AIMovementController : MonoBehaviour
 
     }
 
+    public void MeleeCombat()
+    {
+
+        agent.destination = transform.position;
+    }
+
+    public void GunCombat()
+    {
+        agent.destination = transform.position;
+
+
+    }
+
     public void FollowWaypoint()
     {
         if(co == null)
         {
             co = WaitAtWaypointCoroutine();
-            aiwc.GetNextWaypoint();
+            //aiwc.GetNextWaypoint();
         }
         if (waiting == false && aiwc.currentWaypoint.position != currentWaypoint)
         {
-            StartCoroutine(co);
+            //StopAllCoroutines();
+            StartCoroutine(WaitAtWaypointCoroutine());
         }
 
     }
 
     public void InvestigateSuspicion(Vector3 location)
     {
-        if(co != null)
+        agent.updateRotation = true;
+        if (co != null)
         {
             waiting = false;
-            StopCoroutine(co);
+            StopAllCoroutines();
             co = null;
         }
         agent.destination = location;
