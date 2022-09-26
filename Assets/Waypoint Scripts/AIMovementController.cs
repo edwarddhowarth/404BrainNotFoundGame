@@ -190,6 +190,7 @@ public class AIMovementController : MonoBehaviour
 
     public void PlayerEvadedSearchMovement()
     {
+        
         FollowWaypoint();
     }
 
@@ -231,12 +232,26 @@ public class AIMovementController : MonoBehaviour
     {
 
         agent.destination = transform.position;
+
+        if (co != null)
+        {
+            waiting = false;
+            StopAllCoroutines();
+            co = null;
+        }
+
     }
 
     public void GunCombat()
     {
         agent.destination = transform.position;
 
+        if (co != null)
+        {
+            waiting = false;
+            StopAllCoroutines();
+            co = null;
+        }
 
     }
 
