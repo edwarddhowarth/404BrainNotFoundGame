@@ -191,7 +191,7 @@ public class AIStateController : MonoBehaviour
             }
             if (player != null)
             {
-                Vector3 playerDirection = (player.transform.position - head.position).normalized; //The direction from the enemy that faces towards the player in a Vector3 form
+                Vector3 playerDirection = ((player.transform.position + new Vector3(0, 1f, 0)) - head.position).normalized; //The direction from the enemy that faces towards the player in a Vector3 form
                                                                                                   //Debug.DrawRay(transform.position, new Vector3(player.transform.position.x, 0f , player.transform.position.z) * Vector3.Distance(transform.position, new Vector3(0f, player.transform.position.z, player.transform.position.y)), Color.green);
 
 
@@ -499,6 +499,11 @@ public class AIStateController : MonoBehaviour
             if (playerInLoS && reacquireTimer > EvadedReacquireTime)
             {
                 currentAlertState = AIAlertState.Aware;
+            }
+
+            if(!playerInLoS && reacquireTimer < 0f)
+            {
+                currentAlertState = AIAlertState.Unaware;
             }
         }
     }
