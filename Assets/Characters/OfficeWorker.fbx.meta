@@ -1,0 +1,431 @@
+fileFormatVersion: 2
+guid: 8f3582b3fd0f4ca4895a4c4d71fef7ad
+ModelImporter:
+  serializedVersion: 22103
+  internalIDToNameTable:
+  - first:
+      74: -7109457238012781684
+    second: Armature.001|Armature.001|Armature|Cool Pose
+  - first:
+      74: -8024594520379768000
+    second: Armature.001|Armature.001|Armature|Crouch Idle
+  - first:
+      74: 1248710327021007938
+    second: Armature.001|Armature.001|Armature|Funky Idle
+  - first:
+      74: 7561140479571539261
+    second: Armature.001|Armature.001|Armature|Gaurd Aim
+  - first:
+      74: 1959635467987755696
+    second: Armature.001|Armature.001|Armature|GaurdIdel
+  - first:
+      74: 7847331796833551702
+    second: Armature.001|Armature.001|Armature|Hipshot
+  - first:
+      74: 3505627735609067406
+    second: Armature.001|Armature.001|Armature|Robot Aim
+  - first:
+      74: -7167350631709205372
+    second: Armature.001|Armature.001|Armature|Run
+  - first:
+      74: -4735876130463310990
+    second: Armature.001|Armature.001|Armature|Slide
+  - first:
+      74: -785149686346695830
+    second: Armature.001|Armature.001|Armature|TestSubject Stance
+  - first:
+      74: 3995650697222939243
+    second: Armature.001|Armature.001|Armature|TestSubjectWalk
+  - first:
+      74: -4496342551926850652
+    second: Armature.001|Armature.001|Armature|TPose
+  - first:
+      74: 6767027864026328913
+    second: Armature.001|Armature.001|Armature|Walk
+  - first:
+      74: 7187432311274760158
+    second: Armature.001|Armature.002|Couch to Stand
+  - first:
+      74: 8648235535617879713
+    second: Armature.001|Armature.002|Crouched
+  - first:
+      74: -6258754761702318176
+    second: Armature.001|Armature.002|CrouchedPressedWallLeftWalk
+  - first:
+      74: -1258191795351295564
+    second: Armature.001|Armature.002|CrouchRightwalk
+  - first:
+      74: -6492627161750389861
+    second: Armature.001|Armature.002|CrouchToStand
+  - first:
+      74: -6544016021921731763
+    second: Armature.001|Armature.002|fall into a roll
+  - first:
+      74: -300558229731850279
+    second: Armature.001|Armature.002|Falling
+  - first:
+      74: 2065733510795012065
+    second: Armature.001|Armature.002|ForwardRunGun
+  - first:
+      74: 3816662855776414905
+    second: Armature.001|Armature.002|Hacking
+  - first:
+      74: 3196157241378617423
+    second: Armature.001|Armature.002|Hard landing
+  - first:
+      74: -4313197712263967733
+    second: Armature.001|Armature.002|HardTurnLeftGun
+  - first:
+      74: -762058919210320060
+    second: Armature.001|Armature.002|HardTurnRightGun
+  - first:
+      74: -8053813041110771985
+    second: Armature.001|Armature.002|Idel
+  - first:
+      74: 5701169655519656174
+    second: Armature.001|Armature.002|IdelWithGun
+  - first:
+      74: -2591186166420778068
+    second: Armature.001|Armature.002|Idle
+  - first:
+      74: 8831022804031944365
+    second: Armature.001|Armature.002|Idle Breathing
+  - first:
+      74: 515564409417334775
+    second: Armature.001|Armature.002|Idle leaning against wall
+  - first:
+      74: -782771977251178003
+    second: Armature.001|Armature.002|Idle Right foot shake
+  - first:
+      74: -558119810184936290
+    second: Armature.001|Armature.002|Idle(2)
+  - first:
+      74: -4596138641755169687
+    second: Armature.001|Armature.002|Idle(3)
+  - first:
+      74: -8408417329756769172
+    second: Armature.001|Armature.002|Jumpping
+  - first:
+      74: -8872348832446292981
+    second: Armature.001|Armature.002|LeftCrouchedWalk
+  - first:
+      74: -7306164187939905739
+    second: Armature.001|Armature.002|LeftGunWalk
+  - first:
+      74: 3282486701527518339
+    second: Armature.001|Armature.002|LeftTurnGun
+  - first:
+      74: 362834013810679012
+    second: Armature.001|Armature.002|LeftWalkGun
+  - first:
+      74: -5251904273991264363
+    second: Armature.001|Armature.002|moving left against a wall
+  - first:
+      74: -3343653380597690133
+    second: Armature.001|Armature.002|Moving right against a wall
+  - first:
+      74: 6234829106261421168
+    second: Armature.001|Armature.002|NormalLand
+  - first:
+      74: -8485427679420299830
+    second: Armature.001|Armature.002|PressedWallLeft
+  - first:
+      74: 8763112166251891154
+    second: Armature.001|Armature.002|Pushhing off wall
+  - first:
+      74: -5369435383456672784
+    second: Armature.001|Armature.002|Run to stop
+  - first:
+      74: 4223579039673332923
+    second: Armature.001|Armature.002|running(2)
+  - first:
+      74: -3273269351502285695
+    second: Armature.001|Armature.002|RunningSlifde
+  - first:
+      74: -4585000258460098232
+    second: Armature.001|Armature.002|RunningWithGun
+  - first:
+      74: -2380356024793508514
+    second: Armature.001|Armature.002|RuuningForward
+  - first:
+      74: 878641605702081602
+    second: Armature.001|Armature.002|Sneak right
+  - first:
+      74: -1382779385807344496
+    second: Armature.001|Armature.002|Sneaking left
+  - first:
+      74: -1303914149124208900
+    second: Armature.001|Armature.002|Stand to cover/crouch
+  - first:
+      74: 2282397164003790470
+    second: Armature.001|Armature.002|Stand to standing cover
+  - first:
+      74: -6462091143158983932
+    second: Armature.001|Armature.002|StandingToCrouch
+  - first:
+      74: 6448363909704298873
+    second: Armature.001|Armature.002|StrifeLeft
+  - first:
+      74: -8124356896885739568
+    second: Armature.001|Armature.002|StriftRight
+  - first:
+      74: -2589814867605299772
+    second: Armature.001|Armature.002|Turn Left
+  - first:
+      74: -4817358730476651452
+    second: Armature.001|Armature.002|Walking
+  - first:
+      74: 2974915091789683141
+    second: Armature.001|Armature.002|walking(2)
+  - first:
+      74: -2907106487093412948
+    second: Armature.001|Armature.002|RightWalkGun
+  - first:
+      74: 7145947893084271792
+    second: Armature.001|Armature.002|RightWalkGun.001
+  - first:
+      74: 2863009523156909159
+    second: Armature.001|Armature.002|RightRunGun
+  - first:
+      74: -876609744306698527
+    second: Armature.001|Armature.002|RightRunGun.001
+  - first:
+      74: -6427353262409328505
+    second: Armature.001|Armature.002|LeftRunGun
+  - first:
+      74: -3037080276251471142
+    second: Armature.001|Armature.002|LeftRunGun.001
+  - first:
+      74: -4971421473155709521
+    second: Armature.001|Armature.002|Sneaking
+  - first:
+      74: -4745199926953466725
+    second: Armature.001|Armature.002|Sneaking.001
+  - first:
+      74: -3821337796050305191
+    second: Armature.001|Armature.002|WalkingLeft
+  - first:
+      74: 30860526544343168
+    second: Armature.001|Armature.002|WalkingRight
+  - first:
+      74: 442743389676536507
+    second: Armature.001|Armature.002|RunningRight
+  - first:
+      74: 5702824133419198507
+    second: Armature.001|Armature.002|RunningRight.001
+  - first:
+      74: 7460492583858046419
+    second: Armature.001|Armature.002|RunningLeft
+  - first:
+      74: 4789750699306526506
+    second: Armature.001|Armature.002|RunningLeft.001
+  - first:
+      74: -5550553821778984575
+    second: Armature.001|Armature.002|WalkLeft
+  - first:
+      74: 1685757523130931966
+    second: Armature.001|Armature.002|WalkRight
+  - first:
+      74: 9052273825304814143
+    second: Armature.001|Armature.002|WallPressedWalkingRight
+  - first:
+      74: -8685372158049824111
+    second: Armature.001|Armature.051|Armature|Cool Pose
+  - first:
+      74: -1982719709190547949
+    second: Armature.001|Armature.051|Armature|Crouch Idle
+  - first:
+      74: -7280005192191216276
+    second: Armature.001|Armature.051|Armature|Funky Idle
+  - first:
+      74: 1908997227809008257
+    second: Armature.001|Armature.051|Armature|Gaurd Aim
+  - first:
+      74: 9109489722235220625
+    second: Armature.001|Armature.051|Armature|GaurdIdel
+  - first:
+      74: -3230226491463233393
+    second: Armature.001|Armature.051|Armature|Hipshot
+  - first:
+      74: 2354000640562359137
+    second: Armature.001|Armature.051|Armature|Robot Aim
+  - first:
+      74: 6456441230388971077
+    second: Armature.001|Armature.051|Armature|Run
+  - first:
+      74: -8235338090147304266
+    second: Armature.001|Armature.051|Armature|Slide
+  - first:
+      74: -7675924794120898252
+    second: Armature.001|Armature.051|Armature|TestSubject Stance
+  - first:
+      74: -4573716126643463268
+    second: Armature.001|Armature.051|Armature|TestSubjectWalk
+  - first:
+      74: -9086171958522116752
+    second: Armature.001|Armature.051|Armature|TPose
+  - first:
+      74: -4866089331350670040
+    second: Armature.001|Armature.051|Armature|Walk
+  - first:
+      74: -3797780945190455613
+    second: Armature.001|Armature.051|mixamo.com|Layer0
+  - first:
+      74: 6446952008160903552
+    second: Armature.001|Cool Pose
+  - first:
+      74: -8780173810290626400
+    second: Armature.001|Crouch Idle
+  - first:
+      74: -3325643303372294356
+    second: Armature.001|Funky Idle
+  - first:
+      74: 6321733355718323199
+    second: Armature.001|Gaurd Aim
+  - first:
+      74: 642639315797846721
+    second: Armature.001|Gaurd Aim.001
+  - first:
+      74: 1838892543893756510
+    second: Armature.001|Gaurd Aim.002
+  - first:
+      74: -5389635452449647590
+    second: Armature.001|GaurdIdel
+  - first:
+      74: -1833784642138504701
+    second: Armature.001|Hipshot
+  - first:
+      74: 3991380346333291316
+    second: Armature.001|Robot Aim
+  - first:
+      74: 8673806127378450134
+    second: Armature.001|Robot Aim.001
+  - first:
+      74: -6665163370123221955
+    second: Armature.001|Robot Aim.002
+  - first:
+      74: -2969036542940970518
+    second: Armature.001|Run
+  - first:
+      74: -4699277957838074569
+    second: Armature.001|Slide
+  - first:
+      74: -1437265497583666074
+    second: Armature.001|TestSubject Stance
+  - first:
+      74: -2768017731906016934
+    second: Armature.001|TestSubjectWalk
+  - first:
+      74: 7168972985768442993
+    second: Armature.001|TPose
+  - first:
+      74: -448239265334008587
+    second: Armature.001|Walk
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 556514afbea4c9646a9af61c8538a59c, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 0
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 3
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
