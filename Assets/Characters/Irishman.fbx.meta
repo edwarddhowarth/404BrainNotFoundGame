@@ -4,167 +4,22 @@ ModelImporter:
   serializedVersion: 22103
   internalIDToNameTable:
   - first:
-      74: -7109457238012781684
-    second: Armature.001|Armature.001|Armature|Cool Pose
+      74: 2392125523835613119
+    second: Soilder|Armature.001|Armature|Cool Pose
   - first:
-      74: -8024594520379768000
-    second: Armature.001|Armature.001|Armature|Crouch Idle
-  - first:
-      74: 1248710327021007938
-    second: Armature.001|Armature.001|Armature|Funky Idle
-  - first:
-      74: 7561140479571539261
-    second: Armature.001|Armature.001|Armature|Gaurd Aim
-  - first:
-      74: 1959635467987755696
-    second: Armature.001|Armature.001|Armature|GaurdIdel
-  - first:
-      74: 7847331796833551702
-    second: Armature.001|Armature.001|Armature|Hipshot
-  - first:
-      74: 3505627735609067406
-    second: Armature.001|Armature.001|Armature|Robot Aim
-  - first:
-      74: -7167350631709205372
-    second: Armature.001|Armature.001|Armature|Run
-  - first:
-      74: -4735876130463310990
-    second: Armature.001|Armature.001|Armature|Slide
-  - first:
-      74: -785149686346695830
-    second: Armature.001|Armature.001|Armature|TestSubject Stance
-  - first:
-      74: 3995650697222939243
-    second: Armature.001|Armature.001|Armature|TestSubjectWalk
-  - first:
-      74: -4496342551926850652
-    second: Armature.001|Armature.001|Armature|TPose
-  - first:
-      74: 6767027864026328913
-    second: Armature.001|Armature.001|Armature|Walk
-  - first:
-      74: 7187432311274760158
-    second: Armature.001|Armature.002|Couch to Stand
-  - first:
-      74: 8648235535617879713
-    second: Armature.001|Armature.002|Crouched
-  - first:
-      74: -6544016021921731763
-    second: Armature.001|Armature.002|fall into a roll
-  - first:
-      74: -300558229731850279
-    second: Armature.001|Armature.002|Falling
-  - first:
-      74: 3196157241378617423
-    second: Armature.001|Armature.002|Hard landing
-  - first:
-      74: -2591186166420778068
-    second: Armature.001|Armature.002|Idle
-  - first:
-      74: 515564409417334775
-    second: Armature.001|Armature.002|Idle leaning against wall
-  - first:
-      74: -782771977251178003
-    second: Armature.001|Armature.002|Idle Right foot shake
-  - first:
-      74: -558119810184936290
-    second: Armature.001|Armature.002|Idle(2)
-  - first:
-      74: -4596138641755169687
-    second: Armature.001|Armature.002|Idle(3)
-  - first:
-      74: -8408417329756769172
-    second: Armature.001|Armature.002|Jumpping
-  - first:
-      74: -5251904273991264363
-    second: Armature.001|Armature.002|moving left against a wall
-  - first:
-      74: -3343653380597690133
-    second: Armature.001|Armature.002|Moving right against a wall
-  - first:
-      74: 8763112166251891154
-    second: Armature.001|Armature.002|Pushhing off wall
-  - first:
-      74: -5369435383456672784
-    second: Armature.001|Armature.002|Run to stop
-  - first:
-      74: 4223579039673332923
-    second: Armature.001|Armature.002|running(2)
-  - first:
-      74: 878641605702081602
-    second: Armature.001|Armature.002|Sneak right
-  - first:
-      74: -1382779385807344496
-    second: Armature.001|Armature.002|Sneaking left
-  - first:
-      74: -1303914149124208900
-    second: Armature.001|Armature.002|Stand to cover/crouch
-  - first:
-      74: 2282397164003790470
-    second: Armature.001|Armature.002|Stand to standing cover
-  - first:
-      74: -2589814867605299772
-    second: Armature.001|Armature.002|Turn Left
-  - first:
-      74: 2974915091789683141
-    second: Armature.001|Armature.002|walking(2)
-  - first:
-      74: 6446952008160903552
-    second: Armature.001|Cool Pose
-  - first:
-      74: -8780173810290626400
-    second: Armature.001|Crouch Idle
-  - first:
-      74: -3325643303372294356
-    second: Armature.001|Funky Idle
-  - first:
-      74: 6321733355718323199
-    second: Armature.001|Gaurd Aim
-  - first:
-      74: 642639315797846721
-    second: Armature.001|Gaurd Aim.001
-  - first:
-      74: 1838892543893756510
-    second: Armature.001|Gaurd Aim.002
-  - first:
-      74: -5389635452449647590
-    second: Armature.001|GaurdIdel
-  - first:
-      74: -1833784642138504701
-    second: Armature.001|Hipshot
-  - first:
-      74: 3991380346333291316
-    second: Armature.001|Robot Aim
-  - first:
-      74: 8673806127378450134
-    second: Armature.001|Robot Aim.001
-  - first:
-      74: -6665163370123221955
-    second: Armature.001|Robot Aim.002
-  - first:
-      74: -2969036542940970518
-    second: Armature.001|Run
-  - first:
-      74: -4699277957838074569
-    second: Armature.001|Slide
-  - first:
-      74: -1437265497583666074
-    second: Armature.001|TestSubject Stance
-  - first:
-      74: -2768017731906016934
-    second: Armature.001|TestSubjectWalk
-  - first:
-      74: 7168972985768442993
-    second: Armature.001|TPose
-  - first:
-      74: -448239265334008587
-    second: Armature.001|Walk
+      74: 8496996202250693551
+    second: Batton Red.|Armature.001|Armature|Cool Pose
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material
     second: {fileID: 2100000, guid: 556514afbea4c9646a9af61c8538a59c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Red Glow
+    second: {fileID: 2100000, guid: 020a3bff9db68b84688c00717c5c2e18, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -177,7 +32,8 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
+    rigImportErrors: "Invalid Avatar Rig Configuration. Missing or invalid transform:\n\tRequired
+      human bone 'Hips' not found\n"
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
@@ -185,7 +41,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -242,7 +98,22 @@ ModelImporter:
   humanDescription:
     serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: Irishman(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Soilder
+      parentName: Irishman(Clone)
+      position: {x: 0.0028378326, y: -0.00000000785114, z: 0.000067378016}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
+    - name: Batton Red.
+      parentName: Irishman(Clone)
+      position: {x: -0.8281923, y: 1.1568016, z: -0.6547514}
+      rotation: {x: -0.036221012, y: 0.7043025, z: 0.70103824, w: -0.105790235}
+      scale: {x: 100.00004, y: 99.99998, z: 99.99999}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -253,13 +124,13 @@ ModelImporter:
     globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 2
+  animationType: 3
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
