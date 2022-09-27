@@ -26,19 +26,23 @@ public class PauseMenu : MonoBehaviour
         {
             DeactivateMenu();
         }
-            
+
+       
+
     }
 
     void ActivateMenu()
     {
         Time.timeScale = 0;
         pauseMenuUI.SetActive(true);
+        Cursor.lockState = CursorLockMode.Confined;
     }
     public void DeactivateMenu()
     {
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1;
         isPaused = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
 
@@ -53,4 +57,6 @@ public class PauseMenu : MonoBehaviour
         Application.Quit();
         Debug.Log("You have Exited the game");
     }
+
+    
 }
