@@ -217,8 +217,8 @@ public class AIStateController : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("ray ok");
-                        Debug.Log("Hit name: " + hit.collider.gameObject.name);
+                        Debug.Log("ray bad");
+                        //Debug.Log("Hit name: " + hit.collider.gameObject.name);
                     }
                 }
                 
