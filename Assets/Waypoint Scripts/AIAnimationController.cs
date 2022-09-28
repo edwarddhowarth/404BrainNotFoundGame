@@ -23,15 +23,18 @@ public class AIAnimationController : MonoBehaviour
 
     Animator animator;
     AIMovementController aimc;
+    AIStateController aisc;
 
     bool isStrafing;
 
     
 
     int Strafing;
-
     int Speed;
     int LookMoveAngle;
+    int Attacking;
+
+    bool attack;
 
     float lookTime;
     Quaternion currentHeadRotation;
@@ -47,14 +50,17 @@ public class AIAnimationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         previousFramePostion = transform.position;
 
         animator = GetComponent<Animator>();
         aimc = GetComponent<AIMovementController>();
+        aisc = GetComponent<AIStateController>();
 
         Strafing = Animator.StringToHash("isStrafing");
         Speed = Animator.StringToHash("Speed");
         LookMoveAngle = Animator.StringToHash("Look Move Angle");
+        Attacking = Animator.StringToHash("Attacking");
 
         // check if the neck and spine objects exist on the AI object
         spine = transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0);
@@ -134,6 +140,7 @@ public class AIAnimationController : MonoBehaviour
         animator.SetBool(Strafing, isStrafing);
         animator.SetFloat(Speed, speed);
         animator.SetFloat(LookMoveAngle, angle);
+        animator.SetBool(Attacking, aisc.attack);
 
         previousFramePostion = transform.position;
     }

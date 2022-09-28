@@ -49,7 +49,8 @@ public class AIStateController : MonoBehaviour
 
     private float gunTimer;
     private float meleeTimer;
-    bool attack;
+    [HideInInspector]
+    public bool attack;
 
 
     Vector3 suspiciousLocation;
@@ -186,30 +187,41 @@ public class AIStateController : MonoBehaviour
                 if (playable != null && playable.gameObject && playable.tag == "Player")
                 {
                     player = playable.gameObject;
-                    Debug.Log("player found");
+                    Debug.Log(player.name + " player found");
                 }
             }
             if (player != null)
             {
                 Vector3 playerDirection = ((player.transform.position + new Vector3(0, 1f, 0)) - head.position).normalized; //The direction from the enemy that faces towards the player in a Vector3 form
-                                                                                                  //Debug.DrawRay(transform.position, new Vector3(player.transform.position.x, 0f , player.transform.position.z) * Vector3.Distance(transform.position, new Vector3(0f, player.transform.position.z, player.transform.position.y)), Color.green);
+                                                                                                                            //Debug.DrawRay(transform.position, new Vector3(player.transform.position.x, 0f , player.transform.position.z) * Vector3.Distance(transform.position, new Vector3(0f, player.transform.position.z, player.transform.position.y)), Color.green);
 
-
+                
                 if (Vector3.Angle(player.transform.position - head.position, head.forward) < fieldOfView / 2)
                 {
+                    
                     if (Physics.Raycast(head.position, playerDirection, out hit, Mathf.Infinity))
                     {
+                        
+                        Debug.DrawRay(head.position, playerDirection * Vector3.Distance(head.position, player.transform.position), Color.green);
                         if (hit.collider.tag == "Player" && Vector3.Distance(head.position, hit.collider.transform.position) < ViewDistance)
                         {
-                            Debug.DrawRay(head.position, playerDirection * Vector3.Distance(head.position, player.transform.position), Color.green);
+                            //Debug.DrawRay(head.position, playerDirection * Vector3.Distance(head.position, player.transform.position), Color.green);
+                            Debug.Log("Player light intensity: " + playerLightIntensity);
                             if (playerLightIntensity > LightDetectionThreshold)
                             {
                                 playerInLoS = true;
+                                Debug.Log("player in los");
                             }
 
                         }
                     }
+                    else
+                    {
+                        Debug.Log("ray ok");
+                        Debug.Log("Hit name: " + hit.collider.gameObject.name);
+                    }
                 }
+                
 
 
             }
@@ -263,6 +275,7 @@ public class AIStateController : MonoBehaviour
                 if (suspicionTimer < VisualSuspicionTime + 1)
                 {
                     suspicionTimer += Time.fixedDeltaTime; // increase suspicion
+                    
                 }
 
             }
@@ -659,6 +672,7 @@ public class AIStateController : MonoBehaviour
                 {
                     currentAlertState = AIAlertState.Aware;
                     gunTimer = 0f;
+                    attack = false;
                 }
                 break;
             case AIWeapon.Melee:
@@ -672,6 +686,7 @@ public class AIStateController : MonoBehaviour
                 {
                     currentAlertState = AIAlertState.Aware;
                     meleeTimer = 0f;
+                    attack = false;
                 }
                 break;
 
