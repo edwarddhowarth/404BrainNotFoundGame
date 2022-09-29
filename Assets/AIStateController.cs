@@ -170,7 +170,7 @@ public class AIStateController : MonoBehaviour
         ActionStateUpdate(); // With new alert state, update their action
            
 
-        playerLightIntensity = 0f;
+        //playerLightIntensity = 0f;
     }
 
     // Check if Player is in line of sight and if the player is illuminated enough.
@@ -587,7 +587,15 @@ public class AIStateController : MonoBehaviour
     {
         if(player != null)
         {
-            suspiciousLocation = player.transform.position;
+            if (Vector3.Distance(transform.position, player.transform.position) < 5f)
+            {
+                suspiciousLocation = player.transform.position;
+            }
+            else
+            {
+                suspiciousLocation = transform.position;
+            }
+            
         }
         else
         {

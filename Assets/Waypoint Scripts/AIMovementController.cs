@@ -40,9 +40,10 @@ public class AIMovementController : MonoBehaviour
 
     float nextWaitTime;
 
+    //GameObject gun; // Need to get forward point from it. Then rotate the character such that the barrel will be pointing forward
+    //GameObject melee;
 
 
-    
 
     // Start is called before the first frame update
     void Start()
