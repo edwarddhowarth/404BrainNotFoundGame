@@ -37,6 +37,9 @@ public class AIMovementController : MonoBehaviour
     private Vector3 currentWaypoint;
     private Transform guardLocation;
 
+    public GameObject gun;
+    private AIGunFiring gunScript;
+
 
     float nextWaitTime;
 
@@ -55,10 +58,12 @@ public class AIMovementController : MonoBehaviour
 
         agent = GetComponent<NavMeshAgent>();
 
+        gunScript = gun.GetComponent<AIGunFiring>();
+
         //maxSpeed = agent.speed;
         //maxTurnSpeed = agent.angularSpeed;
 
-        
+
     }
 
     // Update is called once per frame
@@ -253,6 +258,9 @@ public class AIMovementController : MonoBehaviour
             StopAllCoroutines();
             co = null;
         }
+
+        gunScript.Fire(enemy.transform);
+
 
     }
 

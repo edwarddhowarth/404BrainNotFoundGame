@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//Need to allow the AI to go to the player if they have been detected
+
 //Handles the actions the AI is doing and the alert state.
 //Will call the appropriate functions/actions depending on the cominbation of the two.
 
@@ -45,12 +48,14 @@ public class AIStateController : MonoBehaviour
     float ignoreTimer;
     float awareTimer;
     float reacquireTimer;
+    float attackCooldown;
 
 
     private float gunTimer;
+    private float gunDelay;
     private float meleeTimer;
     [HideInInspector]
-    public bool attack;
+    public bool attack = false;
 
 
     Vector3 suspiciousLocation;
@@ -363,7 +368,8 @@ public class AIStateController : MonoBehaviour
 
     private void InCombatStateTimer()
     {
-
+        gunTimer += Time.fixedDeltaTime;
+        attackCooldown += Time.fixedDeltaTime;
     }
 
     /*
@@ -665,23 +671,44 @@ public class AIStateController : MonoBehaviour
         }
     }
 
+    //Create timers to delay the firing of the bullet
+    //Animation needs to play for a long enough time for the gun to be pointed at the player
+    //once that time has passed, trigger the GunCombat function to spawn the bullet
+    //once enough time has passed for the bullet to spawn and leave, exit the firing sequence
+    private void firingTimer()
+    {
+
+    }
+
+    //Need to calculate the angle on the x axis for height and y axis for left/right rotation
+    //so the AI can adjust their body to aim at the player.
     private void InCombatStateAction()
     {
         switch (currentWeapon)
         {
             case AIWeapon.Gun:
-                if (gunTimer < GunFireRate) // Limits the fire rate and makes the AI attempt 1 attack
+                if(attackCooldown > 1f)
                 {
-                    aimc.GunCombat();
-                    attack = true;
-                    gunTimer += Time.fixedDeltaTime;
+                   
+                    if (!attack) // Limits the fire rate and makes the AI attempt 1 attack
+                    {
+                        aimc.GunCombat();
+                        attack = true;
+
+                    }
+                    else if (gunTimer > GunFireRate) // Once they have attacked, go back to aware state to chase and reset attack
+                    {
+                        currentAlertState = AIAlertState.Aware;
+                        gunTimer = 0f;
+                        attack = false;
+                        attackCooldown = 0f;
+                    }
                 }
-                else // Once they have attacked, go back to aware state to chase and reset attack
+                else
                 {
-                    currentAlertState = AIAlertState.Aware;
-                    gunTimer = 0f;
-                    attack = false;
+
                 }
+                
                 break;
             case AIWeapon.Melee:
                 if(meleeTimer < MeleeRate)
