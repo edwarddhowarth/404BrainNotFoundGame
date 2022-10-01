@@ -48,14 +48,16 @@ public class AIStateController : MonoBehaviour
     float ignoreTimer;
     float awareTimer;
     float reacquireTimer;
-    float attackCooldown;
+    float attackCooldownTimer;
+    float shootDelayTimer;
 
 
     private float gunTimer;
-    private float gunDelay;
     private float meleeTimer;
     [HideInInspector]
     public bool attack = false;
+    public bool finishedAttack = false;
+    public bool InCombatAnimation = false;
 
 
     Vector3 suspiciousLocation;
@@ -108,7 +110,7 @@ public class AIStateController : MonoBehaviour
 
     public AIWeapon currentWeapon = AIWeapon.Gun;
 
-    public float GunFireRate = 1f;
+    public float GunFireRate = 3f;
     public float MeleeRate = 1f;
 
     bool triggered = false;
@@ -348,6 +350,7 @@ public class AIStateController : MonoBehaviour
         // If the AI loses LoS, a timer counts down until the AI considers the player lost
         if (currentAlertState == AIAlertState.Aware)
         {
+            attackCooldownTimer += Time.fixedDeltaTime;
             if (playerInLoS)
             {
                 if (awareTimer < TimeTillEvaded + 1)
@@ -369,7 +372,7 @@ public class AIStateController : MonoBehaviour
     private void InCombatStateTimer()
     {
         gunTimer += Time.fixedDeltaTime;
-        attackCooldown += Time.fixedDeltaTime;
+       
     }
 
     /*
@@ -491,9 +494,15 @@ public class AIStateController : MonoBehaviour
             switch(currentWeapon)
             {
                 case AIWeapon.Gun:
-                    if(Vector3.Distance(transform.position, aimc.enemy.transform.position) < ShootingRange && playerInLoS)
+                    Vector3 targetDirection = (aimc.enemy.transform.position - transform.position).normalized;
+                    if (Vector3.Distance(transform.position, aimc.enemy.transform.position) < ShootingRange && Vector3.Angle(transform.forward, targetDirection) < 75 && playerInLoS)
                     {
-                        currentAlertState = AIAlertState.InCombat;
+                        if (attackCooldownTimer > 2f)
+                        {
+                            finishedAttack = false;
+                            currentAlertState = AIAlertState.InCombat;
+                        }
+                        
                     }
                     break;
                 case AIWeapon.Melee:
@@ -687,28 +696,33 @@ public class AIStateController : MonoBehaviour
         switch (currentWeapon)
         {
             case AIWeapon.Gun:
-                if(attackCooldown > 1f)
-                {
-                   
-                    if (!attack) // Limits the fire rate and makes the AI attempt 1 attack
-                    {
-                        aimc.GunCombat();
-                        attack = true;
+                InCombatAnimation = true;
 
-                    }
-                    else if (gunTimer > GunFireRate) // Once they have attacked, go back to aware state to chase and reset attack
-                    {
-                        currentAlertState = AIAlertState.Aware;
-                        gunTimer = 0f;
-                        attack = false;
-                        attackCooldown = 0f;
-                    }
-                }
-                else
-                {
+                attack = true;
+                aimc.agent.destination = transform.position;
 
+
+                shootDelayTimer += Time.fixedDeltaTime;
+
+
+                if (attack && shootDelayTimer > 0.6f && !finishedAttack) // Limits the fire rate and makes the AI attempt 1 attack
+                {
+                    aimc.GunCombat();
+                    finishedAttack = true;
+                    
                 }
-                
+                else if (gunTimer > GunFireRate && finishedAttack) // Once they have attacked, go back to aware state to chase and reset attack
+                {
+                    currentAlertState = AIAlertState.Aware;
+                    gunTimer = 0f;
+                    attack = false;
+                    attackCooldownTimer = 0f;
+                    shootDelayTimer = 0f;
+                    finishedAttack = false;
+                    InCombatAnimation = false;
+                }
+
+
                 break;
             case AIWeapon.Melee:
                 if(meleeTimer < MeleeRate)

@@ -140,7 +140,7 @@ public class AIAnimationController : MonoBehaviour
         animator.SetBool(Strafing, isStrafing);
         animator.SetFloat(Speed, speed);
         animator.SetFloat(LookMoveAngle, angle);
-        animator.SetBool(Attacking, aisc.attack);
+        animator.SetBool(Attacking, aisc.InCombatAnimation);
 
         previousFramePostion = transform.position;
     }
@@ -172,8 +172,6 @@ public class AIAnimationController : MonoBehaviour
             //Vector3 offset = (transform.rotation.eulerAngles - lookDir).normalized;
 
             Vector3 targetDirection = (aimc.enemy.transform.position - transform.position).normalized;
-            Vector3 targetDirectionNeck = (aimc.enemy.transform.position - neck.position).normalized;
-            Vector3 targetDirectionSpine = (aimc.enemy.transform.position - spine.position).normalized;
             Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.green);
             Debug.DrawLine(preUpdatePosition, lookDir * 200, Color.cyan);
             Debug.Log("head angle: " + Vector3.Angle(transform.forward, targetDirection));
@@ -232,39 +230,6 @@ public class AIAnimationController : MonoBehaviour
                 //neck.rotation = currentHeadRotation;
                 //spine.rotation = currentSpineRotation;
             }
-
-            /*
-            else if(Vector3.Angle(transform.forward, targetDirection) < 85)
-            {
-                Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
-                Quaternion newRotation = Quaternion.Lerp(neck.rotation, playerDirection, 100f * Time.deltaTime);
-                Debug.Log("new rotation: " + newRotation);
-                spine.rotation = newRotation;
-                currentSpineRotation = newRotation;
-                Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.black);
-                Debug.Log((aimc.enemy.transform.position - spine.position).normalized);
-
-                playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
-                newRotation = Quaternion.Lerp(spine.rotation, playerDirection, 100f * Time.deltaTime);
-                Debug.Log("new rotation: " + newRotation);
-                neck.rotation = newRotation;
-                Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.black);
-                Debug.Log((aimc.enemy.transform.position - neck.position).normalized);
-            }
-            else
-            {
-                aimc.agent.updateRotation = true;
-
-                Quaternion moveDirection = Quaternion.LookRotation(movementDirection, Vector3.up);
-                Quaternion newRotation = Quaternion.Lerp(spine.rotation, moveDirection, 20f * Time.deltaTime);
-                spine.rotation = newRotation;
-
-                newRotation = Quaternion.Lerp(neck.rotation, moveDirection, 20f * Time.deltaTime);
-                neck.rotation = newRotation;
-
-            }
-
-            */
         }
         else if (animate)
         {
@@ -298,6 +263,21 @@ public class AIAnimationController : MonoBehaviour
 
 
         }
+
+        if(spine && aisc.InCombatAnimation)
+        {
+
+            Vector3 targetDirection = (aimc.enemy.transform.position - aimc.gun.transform.position).normalized;
+
+            Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
+            Quaternion newRotation = Quaternion.Lerp(currentSpineRotation, playerDirection, 6f * Time.deltaTime);
+            Debug.Log("new rotation: " + newRotation);
+            spine.rotation = newRotation;
+            currentSpineRotation = newRotation;
+            Debug.DrawLine(preUpdatePosition, aimc.enemy.transform.position, Color.black);
+            Debug.Log((aimc.enemy.transform.position - neck.position).normalized);
+        }
+
     }
 
 

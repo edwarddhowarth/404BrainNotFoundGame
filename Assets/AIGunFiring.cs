@@ -26,11 +26,12 @@ public class AIGunFiring : MonoBehaviour
 
     public void Fire(Transform fireAt)
     {
-        Vector3 fireAtDirection = (fireAt.position - transform.position).normalized;
+        Vector3 Aim = fireAt.position + new Vector3(0, 1f, 0);
+        Vector3 fireAtDirection = (Aim - barrelExit.transform.position).normalized;
 
         RaycastHit hit;
 
-        Debug.DrawRay(transform.position, fireAtDirection * Vector3.Distance(transform.position, fireAtDirection), Color.green,2f);
+        Debug.DrawRay(barrelExit.transform.position, fireAtDirection * Vector3.Distance(barrelExit.transform.position, fireAtDirection), Color.green,2f);
 
         
     }
