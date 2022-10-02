@@ -113,6 +113,7 @@ public class AIStateController : MonoBehaviour
     public float GunFireRate = 3f;
     public float MeleeRate = 1f;
 
+
     bool triggered = false;
 
     // Start is called before the first frame update

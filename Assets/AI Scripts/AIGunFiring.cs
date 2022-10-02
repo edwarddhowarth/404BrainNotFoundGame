@@ -12,6 +12,8 @@ public class AIGunFiring : MonoBehaviour
 
     private GameObject barrelExit;
 
+    public GameObject Bullet;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +30,8 @@ public class AIGunFiring : MonoBehaviour
     {
         Vector3 Aim = fireAt.position + new Vector3(0, 1f, 0);
         Vector3 fireAtDirection = (Aim - barrelExit.transform.position).normalized;
+
+        Instantiate(Bullet, barrelExit.transform.position, barrelExit.transform.rotation);
 
         RaycastHit hit;
 
