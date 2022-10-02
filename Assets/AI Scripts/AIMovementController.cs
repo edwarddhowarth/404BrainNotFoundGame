@@ -138,6 +138,11 @@ public class AIMovementController : MonoBehaviour
         }
         */
 
+        if(Vector3.Distance(transform.position, enemy.transform.position) < 0.5f)
+        {
+            agent.destination = transform.position;
+        }
+
         float angleToNextWaypoint = calculateWaypointAngles(aiwc.currentWaypoint.position);
         //coIn = StartCoroutine(RotateTowardsWaypoint(angleToNextWaypoint));
 
@@ -281,6 +286,7 @@ public class AIMovementController : MonoBehaviour
 
     public void InvestigateSuspicion(Vector3 location)
     {
+        NavMeshHit hit;
         agent.updateRotation = true;
         if (co != null)
         {
@@ -288,7 +294,31 @@ public class AIMovementController : MonoBehaviour
             StopAllCoroutines();
             co = null;
         }
-        agent.destination = location;
+        if(agent.path.status != NavMeshPathStatus.PathPartial)
+        {
+            if (!NavMesh.SamplePosition(enemy.transform.position, out hit, 0.1f, NavMesh.AllAreas))
+            {
+                if (NavMesh.SamplePosition(enemy.transform.position, out hit, 10f, NavMesh.AllAreas))
+                {
+                    agent.destination = hit.position;
+                }
+                else
+                {
+                    agent.destination = transform.position;
+                }
+
+            }
+            else
+            {
+                agent.destination = hit.position;
+            }
+            
+        }
+        else
+        {
+            agent.destination = location;
+        }
+        
     }
 
 

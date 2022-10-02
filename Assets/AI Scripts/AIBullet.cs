@@ -15,4 +15,19 @@ public class AIBullet : MonoBehaviour
     {
         transform.position = transform.position + (transform.up * 1f);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.GetComponent<Invector.vIDamageReceiver>() != null)
+        {
+            Invector.vDamage damage = new Invector.vDamage(25);
+            other.gameObject.GetComponent<Invector.vIDamageReceiver>().TakeDamage(damage);
+            
+        }
+        else
+        {
+            
+        }
+        Destroy(this);
+    }
 }

@@ -648,19 +648,39 @@ public class AIStateController : MonoBehaviour
         }
 
         attack = false;
-        switch (currentAIRole)
+        if (!playerInLoS && Vector3.Distance(transform.position, aimc.enemy.transform.position) > 0.5f)
         {
-            case AIRole.Guarding:
-                aimc.AwareSearchMovement(suspiciousLocation);
-                break;
-            case AIRole.Patrolling:
-                aimc.AwareSearchMovement(suspiciousLocation);
-                break;
-            case AIRole.Idle:
-                aimc.AwareIdleEvade();
-                break;
+            switch (currentAIRole)
+            {
+                case AIRole.Guarding:
+                    aimc.AwareSearchMovement(suspiciousLocation);
+                    break;
+                case AIRole.Patrolling:
+                    aimc.AwareSearchMovement(suspiciousLocation);
+                    break;
+                case AIRole.Idle:
+                    aimc.AwareIdleEvade();
+                    break;
 
+            }
         }
+        else if(playerInLoS && Vector3.Distance(transform.position, aimc.enemy.transform.position) > 0.5f)
+        {
+            switch (currentAIRole)
+            {
+                case AIRole.Guarding:
+                    aimc.AwareSearchMovement(suspiciousLocation);
+                    break;
+                case AIRole.Patrolling:
+                    aimc.AwareSearchMovement(suspiciousLocation);
+                    break;
+                case AIRole.Idle:
+                    aimc.AwareIdleEvade();
+                    break;
+
+            }
+        }
+        
     }
 
     private void PlayerEvadedStateAction()
