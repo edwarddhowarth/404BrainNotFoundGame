@@ -11,7 +11,7 @@ public class DialogueController : MonoBehaviour
     public Animator DialogueAnimator;
     public string[] Sentences;
     private int Index = 0;
-    private bool StartDialogue = true;
+    public bool StartDialogue = false;
 
  
     // Update is called once per frame
@@ -19,7 +19,7 @@ public class DialogueController : MonoBehaviour
     {
         //Input for next can be changed
 
-        if(Input.GetKeyDown(KeyCode.F))
+        if(Input.GetKeyDown(KeyCode.V))
         {
             if (StartDialogue)
             {
@@ -36,6 +36,10 @@ public class DialogueController : MonoBehaviour
 
     }
 
+    public void enableStartDialogue()
+    {
+        StartDialogue = true;
+    }
 
     void NextSentence()
     {
@@ -49,7 +53,6 @@ public class DialogueController : MonoBehaviour
             DialogueText.text = "";
             DialogueAnimator.SetTrigger("Exit");
             Index = 0;
-            StartDialogue = true;
         }
     }
 
