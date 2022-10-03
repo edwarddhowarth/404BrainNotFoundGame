@@ -19,7 +19,7 @@ public class DialogueController : MonoBehaviour
     {
         //Input for next can be changed
 
-        if(Input.GetKeyDown(KeyCode.F))
+        if(Input.GetKeyDown(KeyCode.V))
         {
             if (StartDialogue)
             {
@@ -36,6 +36,7 @@ public class DialogueController : MonoBehaviour
 
     }
 
+  
 
     void NextSentence()
     {
@@ -49,7 +50,6 @@ public class DialogueController : MonoBehaviour
             DialogueText.text = "";
             DialogueAnimator.SetTrigger("Exit");
             Index = 0;
-            StartDialogue = true;
         }
     }
 
@@ -59,6 +59,7 @@ public class DialogueController : MonoBehaviour
         {
             DialogueText.text += Character;
             yield return new WaitForSeconds(DialogueSpeed);
+            StartDialogue = true;
         }
         Index++;
     }
