@@ -28,6 +28,6 @@ public class AIBullet : MonoBehaviour
         {
             
         }
-        Destroy(this);
+        Destroy(transform.gameObject);
     }
 }

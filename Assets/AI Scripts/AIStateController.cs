@@ -112,6 +112,7 @@ public class AIStateController : MonoBehaviour
 
     public float GunFireRate = 3f;
     public float MeleeRate = 1f;
+    public GameObject gun;
 
 
     bool triggered = false;
@@ -726,10 +727,15 @@ public class AIStateController : MonoBehaviour
                 shootDelayTimer += Time.fixedDeltaTime;
 
 
-                if (attack && shootDelayTimer > 0.6f && !finishedAttack) // Limits the fire rate and makes the AI attempt 1 attack
+                if (attack && shootDelayTimer > 0.55f && !finishedAttack) // Limits the fire rate and makes the AI attempt 1 attack
                 {
-                    aimc.GunCombat();
-                    finishedAttack = true;
+                    Debug.Log("angle for gun: " + Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up));
+                    if (Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up) < 10f)
+                    {
+                        aimc.GunCombat();
+                        finishedAttack = true;
+                    }
+                   
                     
                 }
                 else if (gunTimer > GunFireRate && finishedAttack) // Once they have attacked, go back to aware state to chase and reset attack

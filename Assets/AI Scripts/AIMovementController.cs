@@ -296,21 +296,13 @@ public class AIMovementController : MonoBehaviour
         }
         if(agent.path.status != NavMeshPathStatus.PathPartial)
         {
-            if (!NavMesh.SamplePosition(enemy.transform.position, out hit, 0.1f, NavMesh.AllAreas))
+            if (Vector3.Distance(transform.position, enemy.transform.position) > 10f)
             {
-                if (NavMesh.SamplePosition(enemy.transform.position, out hit, 10f, NavMesh.AllAreas))
-                {
-                    agent.destination = hit.position;
-                }
-                else
-                {
-                    agent.destination = transform.position;
-                }
-
+                agent.destination = location;
             }
             else
             {
-                agent.destination = hit.position;
+                agent.destination = transform.position;
             }
             
         }
