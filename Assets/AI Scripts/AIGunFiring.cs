@@ -6,18 +6,20 @@ using UnityEngine;
 //It will aim this bullet at the player even if the player is not directly infront of the player.
 
 
-
+[RequireComponent(typeof(AudioSource))]
 public class AIGunFiring : MonoBehaviour
 {
 
     private GameObject barrelExit;
 
     public GameObject Bullet;
+    AudioSource gunShot;
 
     // Start is called before the first frame update
     void Start()
     {
         barrelExit = transform.GetChild(0).gameObject;
+        gunShot = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -32,8 +34,10 @@ public class AIGunFiring : MonoBehaviour
         Vector3 fireAtDirection = (Aim - barrelExit.transform.position).normalized;
 
         Instantiate(Bullet, barrelExit.transform.position, barrelExit.transform.rotation);
+        gunShot.Play();
 
         RaycastHit hit;
+
 
         Debug.DrawRay(barrelExit.transform.position, fireAtDirection * Vector3.Distance(barrelExit.transform.position, fireAtDirection), Color.green,2f);
 
