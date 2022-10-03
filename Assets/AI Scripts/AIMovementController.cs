@@ -274,7 +274,7 @@ public class AIMovementController : MonoBehaviour
         if(co == null)
         {
             co = WaitAtWaypointCoroutine();
-            //aiwc.GetNextWaypoint();
+            aiwc.GetNextWaypoint();
         }
         if (waiting == false && aiwc.currentWaypoint.position != currentWaypoint)
         {
@@ -302,7 +302,10 @@ public class AIMovementController : MonoBehaviour
             }
             else
             {
+                Vector3 targetDirection = (enemy.transform.position - transform.position).normalized;
+                Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
                 agent.destination = transform.position;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, playerDirection, 3f);
             }
             
         }

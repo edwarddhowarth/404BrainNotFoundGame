@@ -216,7 +216,9 @@ public class AIStateController : MonoBehaviour
                         {
                             //Debug.DrawRay(head.position, playerDirection * Vector3.Distance(head.position, player.transform.position), Color.green);
                             Debug.Log("Player light intensity: " + playerLightIntensity);
-                            if (playerLightIntensity > LightDetectionThreshold)
+                            float LightDistanceThresh = LightDetectionThreshold - (2 / Mathf.Pow(Vector3.Distance(transform.position, aimc.enemy.transform.position),2));
+                            Debug.Log("Light Distance Adjust: " + LightDistanceThresh);
+                            if (playerLightIntensity > LightDistanceThresh)
                             {
                                 playerInLoS = true;
                                 Debug.Log("player in los");
@@ -730,10 +732,16 @@ public class AIStateController : MonoBehaviour
                 if (attack && shootDelayTimer > 0.55f && !finishedAttack) // Limits the fire rate and makes the AI attempt 1 attack
                 {
                     Debug.Log("angle for gun: " + Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up));
-                    if (Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up) < 10f)
+                    if (Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up) < 15f || Vector3.Distance(transform.position, aimc.enemy.transform.position) < 3f)
                     {
                         aimc.GunCombat();
                         finishedAttack = true;
+                    }
+                    else
+                    {
+                        Vector3 targetDirection = (aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position).normalized;
+                        Quaternion playerDirection = Quaternion.LookRotation(targetDirection, gun.transform.GetChild(0).transform.up);
+                        transform.rotation = Quaternion.RotateTowards(transform.rotation, playerDirection, 3f);
                     }
                    
                     
