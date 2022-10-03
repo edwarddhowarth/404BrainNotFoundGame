@@ -11,7 +11,7 @@ public class DialogueController : MonoBehaviour
     public Animator DialogueAnimator;
     public string[] Sentences;
     private int Index = 0;
-    public bool StartDialogue = false;
+    private bool StartDialogue = true;
 
  
     // Update is called once per frame
@@ -36,10 +36,7 @@ public class DialogueController : MonoBehaviour
 
     }
 
-    public void enableStartDialogue()
-    {
-        StartDialogue = true;
-    }
+  
 
     void NextSentence()
     {
@@ -62,6 +59,7 @@ public class DialogueController : MonoBehaviour
         {
             DialogueText.text += Character;
             yield return new WaitForSeconds(DialogueSpeed);
+            StartDialogue = true;
         }
         Index++;
     }
