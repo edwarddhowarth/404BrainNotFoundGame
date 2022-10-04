@@ -34,7 +34,7 @@ public class CameraMovement : MonoBehaviour
 
     Vector3 startingForward;
 
-    GameObject notifyAI;
+    public GameObject notifyAI;
 
     AIStateController aiScript;
 
@@ -57,7 +57,7 @@ public class CameraMovement : MonoBehaviour
         }
         EventManager.StartListening(EventManager.EventType.ObjectLightIntensity, PlayerDetection);
 
-        aiScript = GetComponent<AIStateController>();
+        aiScript = notifyAI.GetComponent<AIStateController>();
 
     }
 

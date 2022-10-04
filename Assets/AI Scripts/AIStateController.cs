@@ -744,10 +744,10 @@ public class AIStateController : MonoBehaviour
                 shootDelayTimer += Time.fixedDeltaTime;
 
 
-                if (attack && shootDelayTimer > 0.25f && !finishedAttack) // Limits the fire rate and makes the AI attempt 1 attack
+                if (attack && shootDelayTimer > 0.45f && !finishedAttack) // Limits the fire rate and makes the AI attempt 1 attack
                 {
-                    Debug.Log("angle for gun: " + Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.forward));
-                    if (Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.forward) < 15f || Vector3.Distance(transform.position, aimc.enemy.transform.position) < 3f)
+                    Debug.Log("angle for gun: " + Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up));
+                    if (Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up) < 15f || Vector3.Distance(transform.position, aimc.enemy.transform.position) < 3f)
                     {
                         aimc.GunCombat();
                         finishedAttack = true;
@@ -755,7 +755,7 @@ public class AIStateController : MonoBehaviour
                     else
                     {
                         Vector3 targetDirection = (aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position).normalized;
-                        Quaternion playerDirection = Quaternion.LookRotation(targetDirection, gun.transform.GetChild(0).transform.forward);
+                        Quaternion playerDirection = Quaternion.LookRotation(targetDirection, gun.transform.GetChild(0).transform.up);
                         transform.rotation = Quaternion.RotateTowards(transform.rotation, playerDirection, 3f);
                     }
                    
