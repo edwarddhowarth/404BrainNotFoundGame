@@ -42,6 +42,8 @@ public class AIStateController : MonoBehaviour
     bool playerInLoS; // AI sees player but not identifed as hostile yet (Unaware to Suspicious)
     bool PlayerIdentified; // AI has identfied the Player (Suspicious to Unaware)
     bool suspiciousSoundHeard; // AI has heard suspicious sounds emminating from the player or player actions
+    public bool SCIdentify;
+
 
     float suspicionTimer;
     float identifyTimer;
@@ -419,7 +421,12 @@ public class AIStateController : MonoBehaviour
         //currentAlertState = CheckForSuspiciousActions(); // update alert state to suspicious if AI is suspicious on this frame
 
         // unaware AI sees unknown movement/person and becomes suspicious
-        if (currentAlertState == AIAlertState.Unaware)
+        if (SCIdentify)
+        {
+            currentAlertState = AIAlertState.Suspicious;
+            suspicionTimer = 0f;
+        }
+        else if (currentAlertState == AIAlertState.Unaware)
         {
             if (playerInLoS && suspicionTimer > VisualSuspicionTime)
             {
@@ -444,6 +451,13 @@ public class AIStateController : MonoBehaviour
 
         // suspicious AI identifies the unknown as a hostile and becomes aware
         // Else they look at the player if they are in view to identify
+        if(SCIdentify)
+        {
+            currentAlertState = AIAlertState.Aware;
+            identifyTimer = 0f;
+            awareTimer = TimeTillEvaded;
+            aimc.lookAt = true;
+        }
         if (currentAlertState == AIAlertState.Suspicious)
         {
             if (playerInLoS && identifyTimer > VisualIdentifyTime)

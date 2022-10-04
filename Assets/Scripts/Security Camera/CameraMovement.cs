@@ -34,6 +34,10 @@ public class CameraMovement : MonoBehaviour
 
     Vector3 startingForward;
 
+    GameObject notifyAI;
+
+    AIStateController aiScript;
+
     
 
 
@@ -52,6 +56,8 @@ public class CameraMovement : MonoBehaviour
             taskQueue.Enqueue(temp);
         }
         EventManager.StartListening(EventManager.EventType.ObjectLightIntensity, PlayerDetection);
+
+        aiScript = GetComponent<AIStateController>();
 
     }
 
@@ -85,6 +91,7 @@ public class CameraMovement : MonoBehaviour
             {
                 if(hit.collider.tag == "Player")
                 {
+                    aiScript.SCIdentify = true;
                     //Debug.Log("Player is at direction: " + lookAtDirection);
                     EventManager.TriggerEvent(EventManager.EventType.PlayerDetectedByCamera, 
                         new Dictionary<string, object> { { "playerLocation", lookAt },
@@ -111,6 +118,7 @@ public class CameraMovement : MonoBehaviour
                 else
                 {
                     playerDetected = false; // the player was detected in the frame before but now cannot see them
+                    aiScript.SCIdentify = false;
                     //Debug.Log("Lost Player, going back to loop");
                 }
             }
