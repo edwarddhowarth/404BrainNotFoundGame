@@ -266,7 +266,7 @@ public class AIAnimationController : MonoBehaviour
 
         if(spine && aisc.InCombatAnimation)
         {
-            Vector3 targetDirection = (aimc.enemy.transform.position - aisc.gun.transform.position).normalized;
+            Vector3 targetDirection = (aimc.enemy.transform.position - transform.position).normalized;
             Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
             if (Vector3.Angle(aimc.enemy.transform.position - transform.position, transform.forward) > 15)
             {

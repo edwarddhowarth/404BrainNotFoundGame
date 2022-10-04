@@ -255,6 +255,7 @@ public class AIStateController : MonoBehaviour
 
     private void ActionStateTimers()
     {
+
         switch(currentAlertState)
         {
             case AIAlertState.Unaware:
