@@ -30,10 +30,11 @@ public class AIGunFiring : MonoBehaviour
 
     public void Fire(Transform fireAt)
     {
-        Vector3 Aim = fireAt.position + new Vector3(0, 1f, 0);
+        Vector3 Aim = fireAt.position + new Vector3(0, .2f, 0);
         Vector3 fireAtDirection = (Aim - barrelExit.transform.position).normalized;
-
-        Instantiate(Bullet, barrelExit.transform.position, barrelExit.transform.rotation);
+        Quaternion dir = Quaternion.LookRotation(fireAt.position, barrelExit.transform.forward);
+        Quaternion fADQ = Quaternion.Euler(fireAtDirection);
+        Instantiate(Bullet, barrelExit.transform.position, dir);
         gunShot.Play();
 
         RaycastHit hit;
