@@ -119,12 +119,14 @@ public class CameraMovement : MonoBehaviour
                 {
                     playerDetected = false; // the player was detected in the frame before but now cannot see them
                     aiScript.SCIdentify = false;
+
                     //Debug.Log("Lost Player, going back to loop");
                 }
             }
             else
             {
                 playerDetected = false; // the player was detected in the frame before but now cannot see them
+                aiScript.SCIdentify = false;
                 //Debug.Log("Lost Player, going back to loop");
             }
             

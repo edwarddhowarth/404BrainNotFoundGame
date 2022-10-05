@@ -214,17 +214,18 @@ public class AIStateController : MonoBehaviour
                     {
                         
                         Debug.DrawRay(head.position, playerDirection * Vector3.Distance(head.position, player.transform.position), Color.green);
-                        if (hit.collider.tag == "Player" && Vector3.Distance(head.position, hit.collider.transform.position) < ViewDistance)
+                        if (hit.collider.tag == "Player" && Vector3.Distance(head.position, hit.collider.transform.position) < ViewDistance) // Was the object hit the player?
                         {
                             //Debug.DrawRay(head.position, playerDirection * Vector3.Distance(head.position, player.transform.position), Color.green);
                             Debug.Log("Player light intensity: " + playerLightIntensity);
                             float LightDistanceThresh = LightDetectionThreshold - (2 / Mathf.Pow(Vector3.Distance(transform.position, aimc.enemy.transform.position),2));
                             Debug.Log("Light Distance Adjust: " + LightDistanceThresh);
-                            if (playerLightIntensity > LightDistanceThresh)
+                            if (playerLightIntensity > LightDistanceThresh) // Is the player illumented enough to be seen
                             {
                                 playerInLoS = true;
                                 Debug.Log("player in los");
                             }
+                            
 
                         }
                     }
@@ -234,7 +235,13 @@ public class AIStateController : MonoBehaviour
                         //Debug.Log("Hit name: " + hit.collider.gameObject.name);
                     }
                 }
-                
+
+
+                if (Vector3.Distance(transform.position, player.transform.position) < 5f) // Player is right next to the AI
+                {
+                    playerInLoS = true;
+                }
+
 
 
             }
@@ -458,6 +465,10 @@ public class AIStateController : MonoBehaviour
             awareTimer = TimeTillEvaded;
             aimc.lookAt = true;
         }
+        else
+        {
+            aimc.lookAt = false;
+        }
         if (currentAlertState == AIAlertState.Suspicious)
         {
             if (playerInLoS && identifyTimer > VisualIdentifyTime)
@@ -493,44 +504,51 @@ public class AIStateController : MonoBehaviour
     {
 
 
-        //AI was aware but has lost track of the player
+        
         if (currentAlertState == AIAlertState.Aware)
         {
-            if(playerInLoS)
+            aimc.lookAt = true; // AI is aware of player so look at them
+            /*
+            if (playerInLoS)
             {
-                aimc.lookAt = true;
+                
             }
             else
             {
                 aimc.lookAt = false;
             }
+            */
             
             if (awareTimer <= 0)
             {
                 currentAlertState = AIAlertState.PlayerEvaded;
             }
-
-            switch(currentWeapon)
+            else
             {
-                case AIWeapon.Gun:
-                    Vector3 targetDirection = (aimc.enemy.transform.position - transform.position).normalized;
-                    if (Vector3.Distance(transform.position, aimc.enemy.transform.position) < ShootingRange && Vector3.Angle(transform.forward, targetDirection) < 75 && playerInLoS)
-                    {
-                        if (attackCooldownTimer > 2f)
+                switch (currentWeapon)
+                {
+                    case AIWeapon.Gun:
+                        Vector3 targetDirection = (aimc.enemy.transform.position - transform.position).normalized;
+                        if ((Vector3.Distance(transform.position, aimc.enemy.transform.position) < ShootingRange && Vector3.Angle(transform.forward, targetDirection) < 75 && playerInLoS) || (aimc.cantReachPlayer && playerInLoS))
                         {
-                            finishedAttack = false;
+                            if (attackCooldownTimer > 2f)
+                            {
+                                finishedAttack = false;
+                                currentAlertState = AIAlertState.InCombat;
+                            }
+
+                        }
+                        break;
+                    case AIWeapon.Melee:
+                        if (Vector3.Distance(transform.position, aimc.enemy.transform.position) < MeleeRange && playerInLoS)
+                        {
                             currentAlertState = AIAlertState.InCombat;
                         }
-                        
-                    }
-                    break;
-                case AIWeapon.Melee:
-                    if (Vector3.Distance(transform.position, aimc.enemy.transform.position) < MeleeRange && playerInLoS)
-                    {
-                        currentAlertState = AIAlertState.InCombat;
-                    }
-                    break;
+                        break;
+                }
             }
+
+            
         }
 
     }
@@ -747,7 +765,7 @@ public class AIStateController : MonoBehaviour
                 if (attack && shootDelayTimer > 0.45f && !finishedAttack) // Limits the fire rate and makes the AI attempt 1 attack
                 {
                     Debug.Log("angle for gun: " + Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up));
-                    if (Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up) < 15f || Vector3.Distance(transform.position, aimc.enemy.transform.position) < 3f)
+                    if (Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up) < 15f || Vector3.Distance(transform.position, aimc.enemy.transform.position) < 5f)
                     {
                         aimc.GunCombat();
                         finishedAttack = true;

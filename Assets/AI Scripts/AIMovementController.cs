@@ -40,8 +40,12 @@ public class AIMovementController : MonoBehaviour
     public GameObject gun;
     private AIGunFiring gunScript;
 
+    private Vector3 prevPos;
 
+    public bool cantReachPlayer = false;
     float nextWaitTime;
+
+    float idleCount;
 
     //GameObject gun; // Need to get forward point from it. Then rotate the character such that the barrel will be pointing forward
     //GameObject melee;
@@ -63,14 +67,14 @@ public class AIMovementController : MonoBehaviour
         //maxSpeed = agent.speed;
         //maxTurnSpeed = agent.angularSpeed;
 
-
+        prevPos = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        switch(aisc.currentAlertState)
+        prevPos = transform.position;
+        switch (aisc.currentAlertState)
         {
             case AIStateController.AIAlertState.Unaware:
                 agent.speed = patrolMaxSpeed;
@@ -264,7 +268,7 @@ public class AIMovementController : MonoBehaviour
             co = null;
         }
 
-        gunScript.Fire(enemy.transform);
+        //gunScript.Fire(enemy.transform);
 
 
     }
@@ -278,6 +282,16 @@ public class AIMovementController : MonoBehaviour
         }
         if (waiting == false && aiwc.currentWaypoint.position != currentWaypoint)
         {
+            if(Vector3.Distance(prevPos, transform.position) < 1f)
+            {
+                idleCount += Time.fixedDeltaTime;
+            }
+
+            if(idleCount >3f)
+            {
+                aiwc.GetNextWaypoint();
+                idleCount = 0f;
+            }
             //StopAllCoroutines();
             StartCoroutine(WaitAtWaypointCoroutine());
         }
@@ -294,26 +308,61 @@ public class AIMovementController : MonoBehaviour
             StopAllCoroutines();
             co = null;
         }
-        if(agent.path.status != NavMeshPathStatus.PathPartial)
+        if(agent.path.status == NavMeshPathStatus.PathPartial) // Cant get to the location using nav mesh
         {
-            if (Vector3.Distance(transform.position, enemy.transform.position) > 10f)
+            if (Vector3.Distance(transform.position, enemy.transform.position) > 10f) // Lets just keep walking until we are 10 meters away
             {
-                agent.destination = location;
+                //Have a previous frame location
+                // Calculate distance moved from previous to current frame
+                //If that distance is nearly 0, then we are probably stuck on something and we should just stand still
+                if (Vector3.Distance(transform.position, prevPos) < 1f)
+                {
+                    agent.destination = transform.position;
+                    Debug.Log("Partial Nav Path: Standing");
+                    cantReachPlayer = true;
+                }
+                else
+                {
+                    cantReachPlayer = false;
+                    agent.destination = location;
+                    Debug.Log("Partial Nav Path: Chase");
+                }
+
+
+                
+                
             }
-            else
+            else // We are 10 meters away, lets look at the player
             {
                 Vector3 targetDirection = (enemy.transform.position - transform.position).normalized;
                 Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
                 agent.destination = transform.position;
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, playerDirection, 3f);
+                cantReachPlayer = false;
             }
             
         }
-        else
+        else // direct path to location with nav mesh
         {
-            agent.destination = location;
+            cantReachPlayer = false;
+            if (Vector3.Distance(transform.position, enemy.transform.position) > 3f)
+            {
+                agent.destination = location;
+            }
+            else
+            {
+                agent.destination = transform.position;
+            }
+           
         }
         
+
+
+    }
+
+    public void FireCall()
+    {
+        gunScript.Fire(enemy.transform);
     }
 
 
