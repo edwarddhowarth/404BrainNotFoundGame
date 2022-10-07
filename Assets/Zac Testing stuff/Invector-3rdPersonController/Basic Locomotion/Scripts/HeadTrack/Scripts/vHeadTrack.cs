@@ -124,7 +124,7 @@ namespace Invector.vCharacterController
             }
             var layer = LayerMask.NameToLayer("HeadTrack");
             sensor.transform.parent = transform;
-            sensor.gameObject.layer = layer;
+           // sensor.gameObject.layer = layer;
             sensor.gameObject.tag = transform.tag;           
             GetLookPoint();
         }
