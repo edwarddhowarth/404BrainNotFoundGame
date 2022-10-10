@@ -13,7 +13,7 @@ public class AIBullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = transform.position + (transform.up * 1f);
+        transform.position = transform.position + (transform.up * .75f);
     }
 
     private void OnTriggerEnter(Collider other)
