@@ -163,6 +163,7 @@ public class AIStateController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+
         Debug.Log(gameObject.name + " Alert State: " + currentAlertState.ToString());
 
         int numColliders = Physics.OverlapSphereNonAlloc(transform.position, ViewDistance, players, playerMask);
@@ -180,6 +181,13 @@ public class AIStateController : MonoBehaviour
         
         ActionStateUpdate(); // With new alert state, update their action
            
+        if(currentAlertState == AIAlertState.Aware || currentAlertState == AIAlertState.InCombat)
+        {
+            EventManager.TriggerEvent(EventManager.EventType.AIEngaged,
+                        new Dictionary<string, object> { { "AIEngaging", true }
+                        });
+
+        }
 
         //playerLightIntensity = 0f;
     }
