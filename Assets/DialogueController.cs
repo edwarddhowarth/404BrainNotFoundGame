@@ -19,7 +19,7 @@ public class DialogueController : MonoBehaviour
     {
         //Input for next can be changed
 
-        if(Input.GetKeyDown(KeyCode.V))
+        if(Input.GetKeyDown(KeyCode.E))
         {
             if (StartDialogue)
             {
