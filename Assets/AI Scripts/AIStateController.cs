@@ -181,7 +181,14 @@ public class AIStateController : MonoBehaviour
         
         ActionStateUpdate(); // With new alert state, update their action
            
-        if(currentAlertState == AIAlertState.Aware || currentAlertState == AIAlertState.InCombat)
+        
+
+        //playerLightIntensity = 0f;
+    }
+
+    private void Update()
+    {
+        if (currentAlertState == AIAlertState.Aware || currentAlertState == AIAlertState.InCombat)
         {
             EventManager.TriggerEvent(EventManager.EventType.AIEngaged,
                         new Dictionary<string, object> { { "AIEngaging", true }
@@ -189,7 +196,6 @@ public class AIStateController : MonoBehaviour
 
         }
 
-        //playerLightIntensity = 0f;
     }
 
     // Check if Player is in line of sight and if the player is illuminated enough.
