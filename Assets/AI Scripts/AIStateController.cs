@@ -61,6 +61,8 @@ public class AIStateController : MonoBehaviour
     public bool finishedAttack = false;
     public bool InCombatAnimation = false;
 
+    private bool CombatStarted = false;
+
 
     Vector3 suspiciousLocation;
 
@@ -188,11 +190,16 @@ public class AIStateController : MonoBehaviour
 
     private void Update()
     {
-        if (currentAlertState == AIAlertState.Aware || currentAlertState == AIAlertState.InCombat)
+        if ((currentAlertState == AIAlertState.Aware || currentAlertState == AIAlertState.InCombat) && CombatStarted)
         {
             EventManager.TriggerEvent(EventManager.EventType.AIEngaged,
                         new Dictionary<string, object> { { "AIEngaging", true }
                         });
+
+        }
+        else if((currentAlertState != AIAlertState.Aware && currentAlertState != AIAlertState.InCombat) && CombatStarted)
+        {
+            CombatStarted = false;
 
         }
 
@@ -783,6 +790,7 @@ public class AIStateController : MonoBehaviour
                     Debug.Log("angle for gun: " + Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up));
                     if (Vector3.Angle(aimc.enemy.transform.position - gun.transform.GetChild(0).transform.position, gun.transform.GetChild(0).transform.up) < 15f || Vector3.Distance(transform.position, aimc.enemy.transform.position) < 5f)
                     {
+                        CombatStarted = true;
                         aimc.GunCombat();
                         finishedAttack = true;
                     }
