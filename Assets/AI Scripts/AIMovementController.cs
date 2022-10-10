@@ -47,6 +47,8 @@ public class AIMovementController : MonoBehaviour
 
     float idleCount;
 
+    float cantReachPlayerCountdown = 5f;
+
     //GameObject gun; // Need to get forward point from it. Then rotate the character such that the barrel will be pointing forward
     //GameObject melee;
 
@@ -323,9 +325,27 @@ public class AIMovementController : MonoBehaviour
                 }
                 else
                 {
-                    cantReachPlayer = false;
-                    agent.destination = location;
-                    Debug.Log("Partial Nav Path: Chase");
+                    if(cantReachPlayerCountdown >= 0f)
+                    {
+                        cantReachPlayer = false;
+                        agent.destination = location;
+                        Debug.Log("Partial Nav Path: Chase");
+                        cantReachPlayerCountdown += Time.fixedDeltaTime;
+
+                    }
+                    else if(cantReachPlayerCountdown < 0f)
+                    {
+                        agent.destination = transform.position;
+                        Debug.Log("Partial Nav Path: Standing");
+                        cantReachPlayer = true;
+
+                    }
+                    
+
+                    
+
+
+
                 }
 
 
@@ -334,6 +354,7 @@ public class AIMovementController : MonoBehaviour
             }
             else // We are 10 meters away, lets look at the player
             {
+                cantReachPlayerCountdown = 5f;
                 Vector3 targetDirection = (enemy.transform.position - transform.position).normalized;
                 Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
                 agent.destination = transform.position;
