@@ -20,10 +20,11 @@ namespace Invector.vCharacterController
 
         #region Display Controls Variables
         [Header("Controls Display")]
-        [HideInInspector]
         public bool controllerInput;
+        [HideInInspector]
+        
         public Image displayControls;
-        public Sprite joystickControls;
+      //  public Sprite joystickControls;
         public Sprite keyboardControls;
         #endregion
 
@@ -197,9 +198,9 @@ namespace Invector.vCharacterController
 #if MOBILE_INPUT
 		displayControls.enabled = false;
 #else
-            if (controllerInput)
-                displayControls.sprite = joystickControls;
-            else
+           // if (controllerInput)
+               // displayControls.sprite = joystickControls;
+           // else
                 displayControls.sprite = keyboardControls;
 #endif
         }
