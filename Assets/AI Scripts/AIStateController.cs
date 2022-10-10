@@ -531,8 +531,10 @@ public class AIStateController : MonoBehaviour
                         Vector3 targetDirection = (aimc.enemy.transform.position - transform.position).normalized;
                         if ((Vector3.Distance(transform.position, aimc.enemy.transform.position) < ShootingRange && Vector3.Angle(transform.forward, targetDirection) < 75 && playerInLoS) || (aimc.cantReachPlayer && playerInLoS))
                         {
+                            
                             if (attackCooldownTimer > 2f)
                             {
+                                Debug.Log("Is the player inaccessable?: " + aimc.cantReachPlayer);
                                 finishedAttack = false;
                                 currentAlertState = AIAlertState.InCombat;
                             }
