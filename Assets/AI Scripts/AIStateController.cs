@@ -25,6 +25,7 @@ public class AIStateController : MonoBehaviour
 
     [Range(0,1)]
     public float LightDetectionThreshold;
+    float LightDetectionAwareMultiplier = .3f;
 
     public float InstantDetectionSoundLevel = 5f;
 
@@ -211,6 +212,8 @@ public class AIStateController : MonoBehaviour
             CombatStarted = false;
 
         }
+
+        LightDetectionThreshold = LightDetectionThreshold * LightDetectionAwareMultiplier;
 
 
 
