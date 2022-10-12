@@ -6,13 +6,15 @@ using UnityEngine.UI;
 public class PlayerIlluminationHUD : MonoBehaviour
 {
     float intensity;
-    Slider slider;
+    float sound;
+    Slider sliderLight;
     List<float> averageIntensity;
     // Start is called before the first frame update
     void Start()
     {
         EventManager.StartListening(EventManager.EventType.ObjectLightIntensity, PlayerLightIntensity);
-        slider = GetComponent<Slider>();
+        
+        sliderLight = GetComponent<Slider>();
         averageIntensity = new List<float>();
     }
 
@@ -33,7 +35,7 @@ public class PlayerIlluminationHUD : MonoBehaviour
             intensity += i;
         }
 
-        slider.value = intensity/averageIntensity.Count;
+        sliderLight.value = intensity/averageIntensity.Count;
 
         //update some graphic with the value of the player light intensity
         //change color to white if player is not illuminated enough to be spotted by a distant enemy
@@ -55,6 +57,8 @@ public class PlayerIlluminationHUD : MonoBehaviour
             }
         }
     }
+
+ 
 
     //message recieve - player detected by AI
 
