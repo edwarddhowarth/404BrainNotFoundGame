@@ -9,12 +9,14 @@ public class CurrentLightIntensity : MonoBehaviour, IIlluminable
 {
     private float lightIntensity;
     private List<float> incomingLight;
+    Invector.vCharacterController.vThirdPersonController vCharacter;
 
     // Start is called before the first frame update
     void Start()
     {
         incomingLight = new List<float>();
         EventManager.StartListening(EventManager.EventType.LightIntensity, addLightSourceIntensity);
+        vCharacter = GetComponent<Invector.vCharacterController.vThirdPersonController>();
     }
 
     public string getName()
@@ -53,8 +55,18 @@ public class CurrentLightIntensity : MonoBehaviour, IIlluminable
             }
             //intensity = intensity / incommingLight.Count;
         }
+
+        float multiplier;
+        if (vCharacter.isCrouching)
+        {
+            multiplier = .6f;
+        }
+        else
+        {
+            multiplier = 1f;
+        }
         
-        return intensity;
+        return intensity*multiplier;
     }
 
     public void sendIntensity()
