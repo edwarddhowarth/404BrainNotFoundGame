@@ -26,6 +26,8 @@ public class AIStateController : MonoBehaviour
     [Range(0,1)]
     public float LightDetectionThreshold;
 
+    public float InstantDetectionSoundLevel = 5f;
+
     public float VisualSuspicionTime = 3f;
     public float VisualIdentifyTime = 3f;
     public float TimeTillEvaded = 5f;
@@ -36,6 +38,8 @@ public class AIStateController : MonoBehaviour
 
     Vector3 playerLocation;
     float playerLightIntensity;
+    float playerSoundLevel;
+    float playerSoundLevelNormalised;
 
    
 
@@ -136,6 +140,7 @@ public class AIStateController : MonoBehaviour
 
         EventManager.StartListening(EventManager.EventType.PlayerDetectedByCamera, PlayerDetectedByCamera);
         EventManager.StartListening(EventManager.EventType.ObjectLightIntensity, PlayerLightIntensity);
+        EventManager.StartListening(EventManager.EventType.PlayerSoundLevel, PlayerSoundLevel);
 
         players = new Collider[maxPlayers];
 
@@ -167,6 +172,7 @@ public class AIStateController : MonoBehaviour
     {
 
         Debug.Log(gameObject.name + " Alert State: " + currentAlertState.ToString());
+        Debug.Log("Player Sound Level to: " + gameObject.name + " is : " + playerSoundLevelNormalised);
 
         int numColliders = Physics.OverlapSphereNonAlloc(transform.position, ViewDistance, players, playerMask);
 
@@ -182,6 +188,9 @@ public class AIStateController : MonoBehaviour
         AlertStateUpdate(); // With new info, update their state
         
         ActionStateUpdate(); // With new alert state, update their action
+        
+
+        
            
         
 
@@ -202,6 +211,8 @@ public class AIStateController : MonoBehaviour
             CombatStarted = false;
 
         }
+
+
 
     }
 
@@ -311,6 +322,10 @@ public class AIStateController : MonoBehaviour
     {
         if (currentAlertState == AIAlertState.Unaware)
         {
+            if (playerSoundLevelNormalised > InstantDetectionSoundLevel)
+            {
+                suspicionTimer = 10f;
+            }
             //AI can see player but not has not recognised them
             if (playerInLoS)
             {
@@ -337,6 +352,11 @@ public class AIStateController : MonoBehaviour
         // AI is suspicious is and trying to identify the player
         if (currentAlertState == AIAlertState.Suspicious)
         {
+            if (playerSoundLevelNormalised > InstantDetectionSoundLevel)
+            {
+                identifyTimer = 10f;
+            }
+
             //Confirmed an unknown in vision and is now attempting to identify
             if (playerInLoS)
             {
@@ -461,6 +481,7 @@ public class AIStateController : MonoBehaviour
                 currentAlertState = AIAlertState.Suspicious;
                 suspicionTimer = 0f;
             }
+            aimc.lookAt = false;
         }
         // if the alert state didn't change, continue with action (guard, patrol)
 
@@ -524,6 +545,12 @@ public class AIStateController : MonoBehaviour
     public void AwareStateUpdate()
     {
 
+        if (playerSoundLevelNormalised > InstantDetectionSoundLevel)
+        {
+            Vector3 targetDirection = (aimc.enemy.transform.position - transform.position).normalized;
+            Quaternion playerDirection = Quaternion.LookRotation(targetDirection, Vector3.up);
+            Quaternion.RotateTowards(transform.rotation, playerDirection, 3f);
+        }
 
         
         if (currentAlertState == AIAlertState.Aware)
@@ -940,14 +967,24 @@ public class AIStateController : MonoBehaviour
         }
 
     }
-   
 
-    /// <summary>
-    /// Changes the waypoint group for this AI
-    /// </summary>
-    /// <param name="name">Name of the waypoint group</param>
-    /// <param name="closestNode">Get the closest waypoint node after switching. Else go to start.</param>
-    public void ChangeWaypoints(string name, bool closestNode)
+    private void PlayerSoundLevel(Dictionary<string, object> message)
+    {
+        if(message["soundLevel"] is float)
+        {
+            playerSoundLevel = (float)message["soundLevel"];
+            playerSoundLevelNormalised = playerSoundLevel * (1 / (Vector3.Distance(transform.position, aimc.enemy.transform.position)/3));
+        }
+
+    }
+
+
+        /// <summary>
+        /// Changes the waypoint group for this AI
+        /// </summary>
+        /// <param name="name">Name of the waypoint group</param>
+        /// <param name="closestNode">Get the closest waypoint node after switching. Else go to start.</param>
+        public void ChangeWaypoints(string name, bool closestNode)
     {
         aimc.CancelWaypointMovement();
         aiwc.ChangeWaypointGroup(name);

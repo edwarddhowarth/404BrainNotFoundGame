@@ -22,6 +22,7 @@ public class EventManager : MonoBehaviour
 
     public enum EventType {
         PlayerPosition,
+        PlayerSoundLevel,
         InCameraView,
         LightIntensity,
         ObjectLightIntensity,

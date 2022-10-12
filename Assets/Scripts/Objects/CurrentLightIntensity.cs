@@ -56,15 +56,22 @@ public class CurrentLightIntensity : MonoBehaviour, IIlluminable
             //intensity = intensity / incommingLight.Count;
         }
 
-        float multiplier;
+        float multiplier = 1f;
         if (vCharacter.isCrouching)
         {
             multiplier = .6f;
         }
-        else
+
+        if (vCharacter.isSprinting)
         {
-            multiplier = 1f;
+            multiplier = 1.3f;
         }
+
+        if(vCharacter.isRolling)
+        {
+            multiplier = .4f;
+        }
+
         
         return intensity*multiplier;
     }
