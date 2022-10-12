@@ -973,7 +973,7 @@ public class AIStateController : MonoBehaviour
         if(message["soundLevel"] is float)
         {
             playerSoundLevel = (float)message["soundLevel"];
-            playerSoundLevelNormalised = playerSoundLevel * (1 / (Vector3.Distance(transform.position, aimc.enemy.transform.position)/3));
+            playerSoundLevelNormalised = playerSoundLevel * (1 / (Vector3.Distance(transform.position, aimc.enemy.transform.position)/9));
         }
 
     }
