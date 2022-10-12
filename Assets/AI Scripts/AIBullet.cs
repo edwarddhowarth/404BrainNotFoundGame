@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class AIBullet : MonoBehaviour
 {
+    public GameObject bulletRichochet;
+
     // Start is called before the first frame update
     void Start()
     {
         
     }
+
 
     // Update is called once per frame
     void Update()
@@ -28,6 +31,7 @@ public class AIBullet : MonoBehaviour
         {
             
         }
+        Instantiate(bulletRichochet,transform.position,transform.rotation);
         Destroy(transform.gameObject);
     }
 }
