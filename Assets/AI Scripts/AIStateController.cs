@@ -484,6 +484,11 @@ public class AIStateController : MonoBehaviour
                 currentAlertState = AIAlertState.Suspicious;
                 suspicionTimer = 0f;
             }
+            else if (suspicionTimer > VisualSuspicionTime && playerSoundLevelNormalised > InstantDetectionSoundLevel)
+            {
+                currentAlertState = AIAlertState.Suspicious;
+                suspicionTimer = 0f;
+            }
             aimc.lookAt = false;
         }
         // if the alert state didn't change, continue with action (guard, patrol)
@@ -516,7 +521,14 @@ public class AIStateController : MonoBehaviour
         }
         if (currentAlertState == AIAlertState.Suspicious)
         {
-            if (playerInLoS && identifyTimer > VisualIdentifyTime)
+            if (identifyTimer > VisualIdentifyTime && playerSoundLevelNormalised > InstantDetectionSoundLevel)
+            {
+                currentAlertState = AIAlertState.Aware;
+                identifyTimer = 0f;
+                awareTimer = TimeTillEvaded;
+                aimc.lookAt = true;
+            }
+            else if (playerInLoS && identifyTimer > VisualIdentifyTime)
             {
                 currentAlertState = AIAlertState.Aware;
                 identifyTimer = 0f;
@@ -534,6 +546,7 @@ public class AIStateController : MonoBehaviour
                 identifyTimer = 0f;
                 aimc.lookAt = false;
             }
+            
         }
 
         // if the alert state didn't change, continue with action (guard, search)
@@ -976,7 +989,7 @@ public class AIStateController : MonoBehaviour
         if(message["soundLevel"] is float)
         {
             playerSoundLevel = (float)message["soundLevel"];
-            playerSoundLevelNormalised = playerSoundLevel * (1 / (Vector3.Distance(transform.position, aimc.enemy.transform.position)/9));
+            playerSoundLevelNormalised = playerSoundLevel * (1 / (Vector3.Distance(transform.position, aimc.enemy.transform.position)/40));
         }
 
     }
