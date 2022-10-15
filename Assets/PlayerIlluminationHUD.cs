@@ -47,7 +47,7 @@ public class PlayerIlluminationHUD : MonoBehaviour
             intensity += i;
         }
 
-        sliderLight.value = intensity/averageIntensity.Count;
+        sliderLight.value = (intensity/averageIntensity.Count) * 2;
 
         //update some graphic with the value of the player light intensity
         //change color to white if player is not illuminated enough to be spotted by a distant enemy
@@ -56,20 +56,20 @@ public class PlayerIlluminationHUD : MonoBehaviour
         //Camera icon if detected by camera, Eye if detected by AI
         if(!playerEngaged)
         {
-            if (intensity / averageIntensity.Count >= 0 && intensity / averageIntensity.Count <= .15f)
+            if ((intensity / averageIntensity.Count) * 2 >= 0 && (intensity / averageIntensity.Count) * 2 <= .30f)
             {
                 eye1.SetActive(true);
                 eye2.SetActive(false);
                 eye3.SetActive(false);
             }
-            else if (intensity / averageIntensity.Count >= .16f && intensity / averageIntensity.Count <= .30f)
+            else if ((intensity / averageIntensity.Count) * 2 >= .31f && (intensity / averageIntensity.Count) * 2 <= .60f)
             {
                 eye1.SetActive(false);
                 eye2.SetActive(true);
                 eye3.SetActive(false);
 
             }
-            else if (intensity / averageIntensity.Count >= .31f)
+            else if ((intensity / averageIntensity.Count) * 2 >= .61f)
             {
                 eye1.SetActive(false);
                 eye2.SetActive(false);
