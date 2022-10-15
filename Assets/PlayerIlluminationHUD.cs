@@ -9,6 +9,13 @@ public class PlayerIlluminationHUD : MonoBehaviour
     float sound;
     Slider sliderLight;
     List<float> averageIntensity;
+    GameObject indicator;
+    GameObject eye1;
+    GameObject eye2;
+    GameObject eye3;
+
+    bool playerEngaged = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +23,11 @@ public class PlayerIlluminationHUD : MonoBehaviour
         
         sliderLight = GetComponent<Slider>();
         averageIntensity = new List<float>();
+        indicator = transform.GetChild(0).gameObject;
+        eye1 = indicator.transform.GetChild(0).gameObject;
+        eye2 = indicator.transform.GetChild(1).gameObject;
+        eye3 = indicator.transform.GetChild(2).gameObject;
+        EventManager.StartListening(EventManager.EventType.AIEngaged, PlayerEngaged);
     }
 
     // Update is called once per frame
@@ -42,7 +54,38 @@ public class PlayerIlluminationHUD : MonoBehaviour
         //change color to yellow if player is illuminated enough to be spotted a distant enemy
         //change color to red if they are spotted by an AI or Camera
         //Camera icon if detected by camera, Eye if detected by AI
-        
+        if(!playerEngaged)
+        {
+            if (intensity / averageIntensity.Count >= 0 && intensity / averageIntensity.Count <= .15f)
+            {
+                eye1.SetActive(true);
+                eye2.SetActive(false);
+                eye3.SetActive(false);
+            }
+            else if (intensity / averageIntensity.Count >= .16f && intensity / averageIntensity.Count <= .30f)
+            {
+                eye1.SetActive(false);
+                eye2.SetActive(true);
+                eye3.SetActive(false);
+
+            }
+            else if (intensity / averageIntensity.Count >= .31f)
+            {
+                eye1.SetActive(false);
+                eye2.SetActive(false);
+                eye3.SetActive(true);
+            }
+        }
+        else
+        {
+            eye1.SetActive(false);
+            eye2.SetActive(false);
+            eye3.SetActive(true);
+        }
+
+        playerEngaged = false;
+
+
     }
 
     void PlayerLightIntensity(Dictionary<string, object> message)
@@ -58,7 +101,16 @@ public class PlayerIlluminationHUD : MonoBehaviour
         }
     }
 
- 
+    private void PlayerEngaged(Dictionary<string, object> message)
+    {
+        if (message["AIEngaging"] is bool)
+        {
+            playerEngaged = true;
+        }
+
+    }
+
+
 
     //message recieve - player detected by AI
 
