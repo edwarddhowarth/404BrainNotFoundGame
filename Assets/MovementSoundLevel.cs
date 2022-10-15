@@ -28,10 +28,11 @@ public class MovementSoundLevel : MonoBehaviour
             {
                 soundLevel = .2f;
             }
-            if (vCharacter.isRolling)
-            {
-                soundLevel = 1.3f;
-            }
+            
+        }
+        else if (vCharacter.isRolling)
+        {
+            soundLevel = 2f;
         }
         else
         {
