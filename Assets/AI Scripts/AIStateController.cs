@@ -42,6 +42,8 @@ public class AIStateController : MonoBehaviour
     float playerSoundLevel;
     float playerSoundLevelNormalised;
 
+    float InstaDetect = 1f;
+
    
 
     bool playerInLoS; // AI sees player but not identifed as hostile yet (Unaware to Suspicious)
@@ -182,6 +184,13 @@ public class AIStateController : MonoBehaviour
             Debug.LogError(gameObject.name + " Has too many objects in the scene to illuminate");
         }
 
+        if (InstaDetect > 1f)
+        {
+            playerSoundLevelNormalised = InstaDetect;
+        }
+
+        Debug.Log("Player Sound Level to: " + gameObject.name + " is : " + playerSoundLevelNormalised);
+
         VisionUpdate(); // Can see Player?
         HearingUpdate(); // Can hear player or their actions??
         //Check if the player is in vision and if so, go to suspicious state and start a "Vision" timer. If in vision and in a suspicious state increase counter and once it reaches 3 seconds, go to aware. If no vision but suspicious sound, go to suspicious state
@@ -215,7 +224,11 @@ public class AIStateController : MonoBehaviour
 
         LightDetectionThreshold = LightDetectionThreshold * LightDetectionAwareMultiplier;
 
-
+        if(InstaDetect > 1f)
+        {
+            playerSoundLevelNormalised = InstaDetect;
+        }
+        
 
     }
 
@@ -1014,7 +1027,7 @@ public class AIStateController : MonoBehaviour
     private void PlayerDetectedByCamera(Dictionary<string, object> message)
     {
         //Debug.Log("player being checked for detection");
-        if (message["playerLocation"] is Vector3 && message["cameraLocation"] is Vector3)
+        if (message["playerLocation"] is Vector3)
         {
             //NEED TO DECIDE
             // should we check how far the AI is away from the camera and get the closest
@@ -1022,6 +1035,7 @@ public class AIStateController : MonoBehaviour
             // Add a AIManagerScript to check from the position of the Camera which are the closest AI and then message both of them to search - best idea as the camera doesn't know about the AI or Manager, just that its saying its detected the player
 
             playerLocation = (Vector3)message["playerLocation"]; //stores the location of the player locally
+            InstaDetect = 20f;
             //cameraLocation = (Vector3)message["cameraLocation"];
         }
 
