@@ -273,7 +273,7 @@ public class AIStateController : MonoBehaviour
                         {
                             //Debug.DrawRay(head.position, playerDirection * Vector3.Distance(head.position, player.transform.position), Color.green);
                             Debug.Log("Player light intensity: " + playerLightIntensity);
-                            float LightDistanceThresh = LightDetectionThreshold - (2 / Mathf.Pow(Vector3.Distance(transform.position, aimc.enemy.transform.position),2));
+                            float LightDistanceThresh = LightDetectionThreshold + (Vector3.Distance(transform.position, aimc.enemy.transform.position)/100);
                             Debug.Log("Light Distance Adjust: " + LightDistanceThresh);
                             if (playerLightIntensity > LightDistanceThresh) // Is the player illumented enough to be seen
                             {
@@ -293,7 +293,7 @@ public class AIStateController : MonoBehaviour
                 
 
 
-                if (Vector3.Distance(transform.position, player.transform.position) < 1f) // Player is right next to the AI
+                if (Vector3.Distance(transform.position, player.transform.position) < 1.5f) // Player is right next to the AI
                 {
                     playerInLoS = true;
                 }
