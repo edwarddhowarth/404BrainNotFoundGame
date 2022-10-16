@@ -293,7 +293,7 @@ public class AIStateController : MonoBehaviour
                 
 
 
-                if (Vector3.Distance(transform.position, player.transform.position) < 5f) // Player is right next to the AI
+                if (Vector3.Distance(transform.position, player.transform.position) < 1f) // Player is right next to the AI
                 {
                     playerInLoS = true;
                 }
