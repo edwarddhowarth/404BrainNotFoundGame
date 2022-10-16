@@ -273,7 +273,7 @@ public class AIStateController : MonoBehaviour
                         {
                             //Debug.DrawRay(head.position, playerDirection * Vector3.Distance(head.position, player.transform.position), Color.green);
                             Debug.Log("Player light intensity: " + playerLightIntensity);
-                            float LightDistanceThresh = LightDetectionThreshold + (Vector3.Distance(transform.position, aimc.enemy.transform.position)/100);
+                            float LightDistanceThresh = LightDetectionThreshold + (Vector3.Distance(transform.position, aimc.enemy.transform.position)/200);
                             Debug.Log("Light Distance Adjust: " + LightDistanceThresh);
                             if (playerLightIntensity > LightDistanceThresh) // Is the player illumented enough to be seen
                             {
