@@ -27,7 +27,8 @@ public class EventManager : MonoBehaviour
         LightIntensity,
         ObjectLightIntensity,
         PlayerDetectedByCamera,
-        AIEngaged
+        AIEngaged,
+        AIAllAgro
     }
 
 

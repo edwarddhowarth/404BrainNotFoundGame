@@ -18,7 +18,7 @@ public class PlayerDetected : MonoBehaviour
 
         if(detected)
         {
-            EventManager.TriggerEvent(EventManager.EventType.PlayerDetectedByCamera,
+            EventManager.TriggerEvent(EventManager.EventType.AIAllAgro,
                         new Dictionary<string, object> { { "playerLocation", player.transform.position },
                             {"cameraLocation", transform.position }
                         });

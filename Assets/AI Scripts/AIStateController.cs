@@ -142,6 +142,7 @@ public class AIStateController : MonoBehaviour
 
 
         EventManager.StartListening(EventManager.EventType.PlayerDetectedByCamera, PlayerDetectedByCamera);
+        EventManager.StartListening(EventManager.EventType.AIAllAgro, PlayerAllAgro);
         EventManager.StartListening(EventManager.EventType.ObjectLightIntensity, PlayerLightIntensity);
         EventManager.StartListening(EventManager.EventType.PlayerSoundLevel, PlayerSoundLevel);
 
@@ -249,6 +250,12 @@ public class AIStateController : MonoBehaviour
                     Debug.Log(player.name + " player found");
                 }
             }
+
+            if(player == null)
+            {
+               SCIdentify = false;
+            }
+
             if (player != null)
             {
                 Vector3 playerDirection = ((player.transform.position + new Vector3(0, 1f, 0)) - head.position).normalized; //The direction from the enemy that faces towards the player in a Vector3 form
@@ -283,6 +290,7 @@ public class AIStateController : MonoBehaviour
                         //Debug.Log("Hit name: " + hit.collider.gameObject.name);
                     }
                 }
+                
 
 
                 if (Vector3.Distance(transform.position, player.transform.position) < 5f) // Player is right next to the AI
@@ -1027,7 +1035,23 @@ public class AIStateController : MonoBehaviour
     private void PlayerDetectedByCamera(Dictionary<string, object> message)
     {
         //Debug.Log("player being checked for detection");
-        if (message["playerLocation"] is Vector3)
+        if (message["playerLocation"] is Vector3 && message["cameraLocation"] is Vector3)
+        {
+            //NEED TO DECIDE
+            // should we check how far the AI is away from the camera and get the closest
+            // OR
+            // Add a AIManagerScript to check from the position of the Camera which are the closest AI and then message both of them to search - best idea as the camera doesn't know about the AI or Manager, just that its saying its detected the player
+
+            playerLocation = (Vector3)message["playerLocation"]; //stores the location of the player locally
+            //cameraLocation = (Vector3)message["cameraLocation"];
+        }
+
+    }
+
+    private void PlayerAllAgro(Dictionary<string, object> message)
+    {
+        //Debug.Log("player being checked for detection");
+        if (message["playerLocation"] is Vector3 && message["cameraLocation"] is Vector3)
         {
             //NEED TO DECIDE
             // should we check how far the AI is away from the camera and get the closest
