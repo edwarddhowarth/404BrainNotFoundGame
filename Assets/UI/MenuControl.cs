@@ -40,6 +40,9 @@ public class MenuControl : MonoBehaviour
 
     [Header("Levels To Load")]
     public string _newGameLevel;
+    public string _level2;
+    public string _level3;
+    public string _level4;
     private string levelToLoad;
     private string gameLevelToLoad;
 
@@ -80,11 +83,23 @@ public class MenuControl : MonoBehaviour
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
 
+    public void Level2()
+    {
+        SceneManager.LoadScene(_level2);
+    }
+
+    public void Level3()
+    {
+        SceneManager.LoadScene(_level3);
+    }
+    public void Level4()
+    {
+        SceneManager.LoadScene(_level4);
+    }
     public void NewGameDialogYes()
     {
         SceneManager.LoadScene(_newGameLevel);
     }
-
     public void LoadGameDialogYes()
     {
         if(PlayerPrefs.HasKey("SavedLevel"))
