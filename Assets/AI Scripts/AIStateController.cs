@@ -1027,7 +1027,7 @@ public class AIStateController : MonoBehaviour
     private void PlayerDetectedByCamera(Dictionary<string, object> message)
     {
         //Debug.Log("player being checked for detection");
-        if (message["playerLocation"] is Vector3)
+        if (message["playerLocation"] is Vector3 && message["cameraLocation"] is Vector3)
         {
             //NEED TO DECIDE
             // should we check how far the AI is away from the camera and get the closest
