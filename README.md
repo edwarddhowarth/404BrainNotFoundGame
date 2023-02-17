@@ -6,7 +6,7 @@ The game was developed using Unity and created within a 13 week period which inc
 Play the final game here: https://toey.itch.io/coercive-connection
 
 Roles:
-Edward Howarth: Gameplay Programmer
-Jeremiah Horne: 3D Artist
-William McDonald: Level Designer
-Zac Partridge: Gameplay Designer
+* Edward Howarth: Gameplay Programmer
+* Jeremiah Horne: 3D Artist
+* William McDonald: Level Designer
+* Zac Partridge: Gameplay Designer
